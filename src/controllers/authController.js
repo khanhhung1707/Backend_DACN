@@ -39,13 +39,11 @@ export const signUp = async (req, res) => {
 export const signIn = async (req, res) => {
     const { Email, MatKhau } = req.body;
 
-    // Kiểm tra xem có email và mật khẩu được cung cấp hay không
     if (!Email || !MatKhau) {
         return responseData(res, 400, "Email và mật khẩu là bắt buộc");
     }
 
     try {
-        // Tìm người dùng theo email
         const user = await model.NguoiDung.findOne({ where: { Email } });
 
         if (!user) {
@@ -58,10 +56,9 @@ export const signIn = async (req, res) => {
             return responseData(res, 401, "Mật khẩu không chính xác");
         }
 
-        // Tạo token với toàn bộ thông tin người dùng
         const token = createToken(user.toJSON()); // Chuyển đối tượng user thành JSON để lấy các thuộc tính
 
-        // Trả về thông tin người dùng (bao gồm cả AnhDaiDien)
+        // Trả về thông tin người dùng 
         return responseData(res, 200, "Đăng nhập thành công", { token, user: { ...user.toJSON(), MatKhau: undefined } });
     } catch (error) {
         return responseData(res, 500, "Lỗi khi đăng nhập", error);

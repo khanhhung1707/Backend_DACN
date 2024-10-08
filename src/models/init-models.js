@@ -1,7 +1,8 @@
 import _sequelize from "sequelize";
 const DataTypes = _sequelize.DataTypes;
+import _BinhLuan from  "./BinhLuan.js";
 import _BlackList from  "./BlackList.js";
-import _Cmt from  "./Cmt.js";
+import _DangKyKhoaHoc from  "./DangKyKhoaHoc.js";
 import _DanhMucKhoaHoc from  "./DanhMucKhoaHoc.js";
 import _DonHang from  "./DonHang.js";
 import _FollowAuthor from  "./FollowAuthor.js";
@@ -19,8 +20,9 @@ import _ThongBao from  "./ThongBao.js";
 import _TracNghiem from  "./TracNghiem.js";
 
 export default function initModels(sequelize) {
+  const BinhLuan = _BinhLuan.init(sequelize, DataTypes);
   const BlackList = _BlackList.init(sequelize, DataTypes);
-  const Cmt = _Cmt.init(sequelize, DataTypes);
+  const DangKyKhoaHoc = _DangKyKhoaHoc.init(sequelize, DataTypes);
   const DanhMucKhoaHoc = _DanhMucKhoaHoc.init(sequelize, DataTypes);
   const DonHang = _DonHang.init(sequelize, DataTypes);
   const FollowAuthor = _FollowAuthor.init(sequelize, DataTypes);
@@ -41,10 +43,12 @@ export default function initModels(sequelize) {
   DanhMucKhoaHoc.hasMany(KhoaHoc, { as: "KhoaHocs", foreignKey: "IDDanhMuc"});
   ThanhToan.belongsTo(DonHang, { as: "IDDonHang_DonHang", foreignKey: "IDDonHang"});
   DonHang.hasMany(ThanhToan, { as: "ThanhToans", foreignKey: "IDDonHang"});
+  BinhLuan.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(BinhLuan, { as: "BinhLuans", foreignKey: "IDKhoaHoc"});
   BlackList.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
   KhoaHoc.hasMany(BlackList, { as: "BlackLists", foreignKey: "IDKhoaHoc"});
-  Cmt.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
-  KhoaHoc.hasMany(Cmt, { as: "Cmts", foreignKey: "IDKhoaHoc"});
+  DangKyKhoaHoc.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(DangKyKhoaHoc, { as: "DangKyKhoaHocs", foreignKey: "IDKhoaHoc"});
   DonHang.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
   KhoaHoc.hasMany(DonHang, { as: "DonHangs", foreignKey: "IDKhoaHoc"});
   GhiDanh.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
@@ -63,10 +67,12 @@ export default function initModels(sequelize) {
   KhoaHoc.hasMany(TracNghiem, { as: "TracNghiems", foreignKey: "IDKhoaHoc"});
   KhoaHoc.belongsTo(KhuyenMai, { as: "IDKhuyenMai_KhuyenMai", foreignKey: "IDKhuyenMai"});
   KhuyenMai.hasMany(KhoaHoc, { as: "KhoaHocs", foreignKey: "IDKhuyenMai"});
+  BinhLuan.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(BinhLuan, { as: "BinhLuans", foreignKey: "IDNguoiDung"});
   BlackList.belongsTo(NguoiDung, { as: "IDNguoiDungAdmin_NguoiDung", foreignKey: "IDNguoiDungAdmin"});
   NguoiDung.hasMany(BlackList, { as: "BlackLists", foreignKey: "IDNguoiDungAdmin"});
-  Cmt.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
-  NguoiDung.hasMany(Cmt, { as: "Cmts", foreignKey: "IDNguoiDung"});
+  DangKyKhoaHoc.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(DangKyKhoaHoc, { as: "DangKyKhoaHocs", foreignKey: "IDNguoiDung"});
   DonHang.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
   NguoiDung.hasMany(DonHang, { as: "DonHangs", foreignKey: "IDNguoiDung"});
   FollowAuthor.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
@@ -91,8 +97,9 @@ export default function initModels(sequelize) {
   ThanhToan.hasMany(DonHang, { as: "DonHangs", foreignKey: "IDThanhToan"});
 
   return {
+    BinhLuan,
     BlackList,
-    Cmt,
+    DangKyKhoaHoc,
     DanhMucKhoaHoc,
     DonHang,
     FollowAuthor,

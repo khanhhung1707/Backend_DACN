@@ -76,6 +76,10 @@ export default class KhoaHoc extends Model {
       type: DataTypes.ENUM('tra_phi','mien_phi'),
       allowNull: false,
       defaultValue: "mien_phi"
+    },
+    GiaTien: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,
