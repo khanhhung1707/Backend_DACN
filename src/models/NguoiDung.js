@@ -1,41 +1,46 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class GIANGVIEN extends Model {
+export default class NguoiDung extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_giang_vien: {
+    IDNguoiDung: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ten: {
+    TenDangNhap: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: "email"
-    },
-    mat_khau: {
+    MatKhau: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    trang_thai: {
-      type: DataTypes.TINYINT,
-      allowNull: true,
-      defaultValue: 1
+    Email: {
+      type: DataTypes.STRING(255),
+      allowNull: false
     },
-    role: {
-      type: DataTypes.ENUM('giang_vien'),
-      allowNull: true,
-      defaultValue: "giang_vien"
+    HoTen: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    SDT: {
+      type: DataTypes.STRING(15),
+      allowNull: true
+    },
+    Role: {
+      type: DataTypes.ENUM('hocvien','giangvien','admin'),
+      allowNull: false
+    },
+    AnhDaiDien: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'GIANGVIEN',
+    tableName: 'NguoiDung',
     timestamps: false,
     indexes: [
       {
@@ -43,15 +48,7 @@ export default class GIANGVIEN extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_giang_vien" },
-        ]
-      },
-      {
-        name: "email",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "email" },
+          { name: "IDNguoiDung" },
         ]
       },
     ]

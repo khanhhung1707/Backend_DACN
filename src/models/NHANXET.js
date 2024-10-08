@@ -1,47 +1,47 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class NHANXET extends Model {
+export default class NhanXet extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_nhan_xet: {
+    IDNhanXet: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ma_khoa_hoc: {
+    IDKhoaHoc: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'KHOAHOC',
-        key: 'ma_khoa_hoc'
+        model: 'KhoaHoc',
+        key: 'IDKhoaHoc'
       }
     },
-    ma_hoc_vien: {
+    IDNguoiDung: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'HOCVIEN',
-        key: 'ma_hoc_vien'
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
       }
     },
-    noi_dung: {
+    NoiDung: {
       type: DataTypes.TEXT,
-      allowNull: true
+      allowNull: false
     },
-    xep_hang: {
+    XepLoai: {
       type: DataTypes.ENUM('tích cực','tiêu cực'),
-      allowNull: true
+      allowNull: false
     },
-    ngay_nhan_xet: {
+    ThoiGian: {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {
     sequelize,
-    tableName: 'NHANXET',
+    tableName: 'NhanXet',
     timestamps: false,
     indexes: [
       {
@@ -49,21 +49,21 @@ export default class NHANXET extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_nhan_xet" },
+          { name: "IDNhanXet" },
         ]
       },
       {
-        name: "ma_khoa_hoc",
+        name: "IDKhoaHoc",
         using: "BTREE",
         fields: [
-          { name: "ma_khoa_hoc" },
+          { name: "IDKhoaHoc" },
         ]
       },
       {
-        name: "ma_hoc_vien",
+        name: "IDNguoiDung",
         using: "BTREE",
         fields: [
-          { name: "ma_hoc_vien" },
+          { name: "IDNguoiDung" },
         ]
       },
     ]

@@ -1,36 +1,42 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class ADMIN extends Model {
+export default class KhuyenMai extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_admin: {
+    IDKhuyenMai: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ten: {
+    TenKhuyenMai: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     },
-    email: {
+    MoTaKhuyenMai: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    LoaiKhuyenMai: {
       type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: "email"
+      allowNull: true
     },
-    mat_khau: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    GiaTri: {
+      type: DataTypes.DECIMAL(5,2),
+      allowNull: true
     },
-    trang_thai: {
-      type: DataTypes.TINYINT,
-      allowNull: true,
-      defaultValue: 1
+    NgayBatDau: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
+    },
+    NgayKetThuc: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'ADMIN',
+    tableName: 'KhuyenMai',
     timestamps: false,
     indexes: [
       {
@@ -38,15 +44,7 @@ export default class ADMIN extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_admin" },
-        ]
-      },
-      {
-        name: "email",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "email" },
+          { name: "IDKhuyenMai" },
         ]
       },
     ]

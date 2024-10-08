@@ -1,57 +1,85 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class KHOAHOC extends Model {
+export default class KhoaHoc extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_khoa_hoc: {
+    IDKhoaHoc: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ten_khoa_hoc: {
+    IDNguoiDung: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
+      }
+    },
+    IDKhuyenMai: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'KhuyenMai',
+        key: 'IDKhuyenMai'
+      }
+    },
+    IDDanhMuc: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'DanhMucKhoaHoc',
+        key: 'IDDanhMuc'
+      }
+    },
+    TenKhoaHoc: {
       type: DataTypes.STRING(255),
       allowNull: false
     },
-    mo_ta: {
+    MoTaKhoaHoc: {
       type: DataTypes.TEXT,
       allowNull: true
     },
-    ma_giang_vien: {
+    HinhAnh: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    NgayDang: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    LuotXem: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {
-        model: 'GIANGVIEN',
-        key: 'ma_giang_vien'
-      }
+      defaultValue: 0
     },
-    ma_danh_muc: {
+    BiDanh: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    MaNhom: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    SoLuongHocVien: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {
-        model: 'DANHMUC',
-        key: 'ma_danh_muc'
-      }
+      defaultValue: 0
     },
-    gia: {
-      type: DataTypes.DECIMAL(10,2),
-      allowNull: true,
-      defaultValue: 0.00
+    GiamGia: {
+      type: DataTypes.DECIMAL(5,2),
+      allowNull: true
     },
-    loai_khoa_hoc: {
-      type: DataTypes.ENUM('miễn phí','trả phí'),
-      allowNull: true,
-      defaultValue: "trả phí"
-    },
-    trang_thai: {
-      type: DataTypes.TINYINT,
-      allowNull: true,
-      defaultValue: 1
+    LoaiKhoaHoc: {
+      type: DataTypes.ENUM('tra_phi','mien_phi'),
+      allowNull: false,
+      defaultValue: "mien_phi"
     }
   }, {
     sequelize,
-    tableName: 'KHOAHOC',
+    tableName: 'KhoaHoc',
     timestamps: false,
     indexes: [
       {
@@ -59,21 +87,28 @@ export default class KHOAHOC extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_khoa_hoc" },
+          { name: "IDKhoaHoc" },
         ]
       },
       {
-        name: "ma_giang_vien",
+        name: "IDNguoiDung",
         using: "BTREE",
         fields: [
-          { name: "ma_giang_vien" },
+          { name: "IDNguoiDung" },
         ]
       },
       {
-        name: "ma_danh_muc",
+        name: "IDDanhMuc",
         using: "BTREE",
         fields: [
-          { name: "ma_danh_muc" },
+          { name: "IDDanhMuc" },
+        ]
+      },
+      {
+        name: "IDKhuyenMai",
+        using: "BTREE",
+        fields: [
+          { name: "IDKhuyenMai" },
         ]
       },
     ]

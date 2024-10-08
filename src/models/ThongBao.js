@@ -1,34 +1,34 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class THEODOI extends Model {
+export default class ThongBao extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_theo_doi: {
+    IDThongBao: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ma_hoc_vien: {
+    IDNguoiDung: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'HOCVIEN',
-        key: 'ma_hoc_vien'
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
       }
     },
-    ma_giang_vien: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'GIANGVIEN',
-        key: 'ma_giang_vien'
-      }
+    NoiDungThongBao: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    NgayThongBao: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'THEODOI',
+    tableName: 'ThongBao',
     timestamps: false,
     indexes: [
       {
@@ -36,21 +36,14 @@ export default class THEODOI extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_theo_doi" },
+          { name: "IDThongBao" },
         ]
       },
       {
-        name: "ma_hoc_vien",
+        name: "IDNguoiDung",
         using: "BTREE",
         fields: [
-          { name: "ma_hoc_vien" },
-        ]
-      },
-      {
-        name: "ma_giang_vien",
-        using: "BTREE",
-        fields: [
-          { name: "ma_giang_vien" },
+          { name: "IDNguoiDung" },
         ]
       },
     ]

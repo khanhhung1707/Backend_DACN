@@ -1,10 +1,10 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class GioHang extends Model {
+export default class FollowAuthor extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    IDGioHang: {
+    IDFollowAuthor: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -18,21 +18,21 @@ export default class GioHang extends Model {
         key: 'IDNguoiDung'
       }
     },
-    IDKhoaHoc: {
+    IDNguoiDungGiangVien: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'KhoaHoc',
-        key: 'IDKhoaHoc'
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
       }
     },
-    SoLuong: {
-      type: DataTypes.INTEGER,
+    NgayFollow: {
+      type: DataTypes.DATEONLY,
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'GioHang',
+    tableName: 'FollowAuthor',
     timestamps: false,
     indexes: [
       {
@@ -40,7 +40,7 @@ export default class GioHang extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "IDGioHang" },
+          { name: "IDFollowAuthor" },
         ]
       },
       {
@@ -51,10 +51,10 @@ export default class GioHang extends Model {
         ]
       },
       {
-        name: "IDKhoaHoc",
+        name: "IDNguoiDungGiangVien",
         using: "BTREE",
         fields: [
-          { name: "IDKhoaHoc" },
+          { name: "IDNguoiDungGiangVien" },
         ]
       },
     ]

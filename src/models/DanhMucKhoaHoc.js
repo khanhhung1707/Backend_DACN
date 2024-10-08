@@ -1,22 +1,22 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class DANHMUC extends Model {
+export default class DanhMucKhoaHoc extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_danh_muc: {
+    IDDanhMuc: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ten_danh_muc: {
+    TenDanhMuc: {
       type: DataTypes.STRING(255),
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'DANHMUC',
+    tableName: 'DanhMucKhoaHoc',
     timestamps: false,
     indexes: [
       {
@@ -24,7 +24,7 @@ export default class DANHMUC extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_danh_muc" },
+          { name: "IDDanhMuc" },
         ]
       },
     ]

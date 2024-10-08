@@ -1,71 +1,112 @@
 import _sequelize from "sequelize";
 const DataTypes = _sequelize.DataTypes;
-import _ADMIN from  "./ADMIN.js";
-import _BINHLUAN from  "./BINHLUAN.js";
-import _BLACKLIST from  "./BLACKLIST.js";
-import _DANHMUC from  "./DANHMUC.js";
-import _GIANGVIEN from  "./GIANGVIEN.js";
-import _GIOHANG from  "./GIOHANG.js";
-import _HASHTAG from  "./HASHTAG.js";
-import _HOCVIEN from  "./HOCVIEN.js";
-import _KHOAHOC from  "./KHOAHOC.js";
-import _NHANXET from  "./NHANXET.js";
-import _THANHTOAN from  "./THANHTOAN.js";
-import _THEODOI from  "./THEODOI.js";
+import _BlackList from  "./BlackList.js";
+import _Cmt from  "./Cmt.js";
+import _DanhMucKhoaHoc from  "./DanhMucKhoaHoc.js";
+import _DonHang from  "./DonHang.js";
+import _FollowAuthor from  "./FollowAuthor.js";
+import _GhiDanh from  "./GhiDanh.js";
+import _GioHang from  "./GioHang.js";
+import _Hashtag from  "./Hashtag.js";
+import _KhoaHoc from  "./KhoaHoc.js";
+import _KhoaHocYeuThich from  "./KhoaHocYeuThich.js";
+import _KhuyenMai from  "./KhuyenMai.js";
+import _KiemDuyetKhoaHoc from  "./KiemDuyetKhoaHoc.js";
+import _NguoiDung from  "./NguoiDung.js";
+import _NhanXet from  "./NhanXet.js";
+import _ThanhToan from  "./ThanhToan.js";
+import _ThongBao from  "./ThongBao.js";
+import _TracNghiem from  "./TracNghiem.js";
 
 export default function initModels(sequelize) {
-  const ADMIN = _ADMIN.init(sequelize, DataTypes);
-  const BINHLUAN = _BINHLUAN.init(sequelize, DataTypes);
-  const BLACKLIST = _BLACKLIST.init(sequelize, DataTypes);
-  const DANHMUC = _DANHMUC.init(sequelize, DataTypes);
-  const GIANGVIEN = _GIANGVIEN.init(sequelize, DataTypes);
-  const GIOHANG = _GIOHANG.init(sequelize, DataTypes);
-  const HASHTAG = _HASHTAG.init(sequelize, DataTypes);
-  const HOCVIEN = _HOCVIEN.init(sequelize, DataTypes);
-  const KHOAHOC = _KHOAHOC.init(sequelize, DataTypes);
-  const NHANXET = _NHANXET.init(sequelize, DataTypes);
-  const THANHTOAN = _THANHTOAN.init(sequelize, DataTypes);
-  const THEODOI = _THEODOI.init(sequelize, DataTypes);
+  const BlackList = _BlackList.init(sequelize, DataTypes);
+  const Cmt = _Cmt.init(sequelize, DataTypes);
+  const DanhMucKhoaHoc = _DanhMucKhoaHoc.init(sequelize, DataTypes);
+  const DonHang = _DonHang.init(sequelize, DataTypes);
+  const FollowAuthor = _FollowAuthor.init(sequelize, DataTypes);
+  const GhiDanh = _GhiDanh.init(sequelize, DataTypes);
+  const GioHang = _GioHang.init(sequelize, DataTypes);
+  const Hashtag = _Hashtag.init(sequelize, DataTypes);
+  const KhoaHoc = _KhoaHoc.init(sequelize, DataTypes);
+  const KhoaHocYeuThich = _KhoaHocYeuThich.init(sequelize, DataTypes);
+  const KhuyenMai = _KhuyenMai.init(sequelize, DataTypes);
+  const KiemDuyetKhoaHoc = _KiemDuyetKhoaHoc.init(sequelize, DataTypes);
+  const NguoiDung = _NguoiDung.init(sequelize, DataTypes);
+  const NhanXet = _NhanXet.init(sequelize, DataTypes);
+  const ThanhToan = _ThanhToan.init(sequelize, DataTypes);
+  const ThongBao = _ThongBao.init(sequelize, DataTypes);
+  const TracNghiem = _TracNghiem.init(sequelize, DataTypes);
 
-  KHOAHOC.belongsTo(DANHMUC, { as: "ma_danh_muc_DANHMUC", foreignKey: "ma_danh_muc"});
-  DANHMUC.hasMany(KHOAHOC, { as: "KHOAHOCs", foreignKey: "ma_danh_muc"});
-  KHOAHOC.belongsTo(GIANGVIEN, { as: "ma_giang_vien_GIANGVIEN", foreignKey: "ma_giang_vien"});
-  GIANGVIEN.hasMany(KHOAHOC, { as: "KHOAHOCs", foreignKey: "ma_giang_vien"});
-  THEODOI.belongsTo(GIANGVIEN, { as: "ma_giang_vien_GIANGVIEN", foreignKey: "ma_giang_vien"});
-  GIANGVIEN.hasMany(THEODOI, { as: "THEODOIs", foreignKey: "ma_giang_vien"});
-  BINHLUAN.belongsTo(HOCVIEN, { as: "ma_hoc_vien_HOCVIEN", foreignKey: "ma_hoc_vien"});
-  HOCVIEN.hasMany(BINHLUAN, { as: "BINHLUANs", foreignKey: "ma_hoc_vien"});
-  GIOHANG.belongsTo(HOCVIEN, { as: "ma_hoc_vien_HOCVIEN", foreignKey: "ma_hoc_vien"});
-  HOCVIEN.hasMany(GIOHANG, { as: "GIOHANGs", foreignKey: "ma_hoc_vien"});
-  NHANXET.belongsTo(HOCVIEN, { as: "ma_hoc_vien_HOCVIEN", foreignKey: "ma_hoc_vien"});
-  HOCVIEN.hasMany(NHANXET, { as: "NHANXETs", foreignKey: "ma_hoc_vien"});
-  THANHTOAN.belongsTo(HOCVIEN, { as: "ma_hoc_vien_HOCVIEN", foreignKey: "ma_hoc_vien"});
-  HOCVIEN.hasMany(THANHTOAN, { as: "THANHTOANs", foreignKey: "ma_hoc_vien"});
-  THEODOI.belongsTo(HOCVIEN, { as: "ma_hoc_vien_HOCVIEN", foreignKey: "ma_hoc_vien"});
-  HOCVIEN.hasMany(THEODOI, { as: "THEODOIs", foreignKey: "ma_hoc_vien"});
-  BINHLUAN.belongsTo(KHOAHOC, { as: "ma_khoa_hoc_KHOAHOC", foreignKey: "ma_khoa_hoc"});
-  KHOAHOC.hasMany(BINHLUAN, { as: "BINHLUANs", foreignKey: "ma_khoa_hoc"});
-  BLACKLIST.belongsTo(KHOAHOC, { as: "ma_khoa_hoc_KHOAHOC", foreignKey: "ma_khoa_hoc"});
-  KHOAHOC.hasMany(BLACKLIST, { as: "BLACKLISTs", foreignKey: "ma_khoa_hoc"});
-  GIOHANG.belongsTo(KHOAHOC, { as: "ma_khoa_hoc_KHOAHOC", foreignKey: "ma_khoa_hoc"});
-  KHOAHOC.hasMany(GIOHANG, { as: "GIOHANGs", foreignKey: "ma_khoa_hoc"});
-  NHANXET.belongsTo(KHOAHOC, { as: "ma_khoa_hoc_KHOAHOC", foreignKey: "ma_khoa_hoc"});
-  KHOAHOC.hasMany(NHANXET, { as: "NHANXETs", foreignKey: "ma_khoa_hoc"});
-  THANHTOAN.belongsTo(KHOAHOC, { as: "ma_khoa_hoc_KHOAHOC", foreignKey: "ma_khoa_hoc"});
-  KHOAHOC.hasMany(THANHTOAN, { as: "THANHTOANs", foreignKey: "ma_khoa_hoc"});
+  KhoaHoc.belongsTo(DanhMucKhoaHoc, { as: "IDDanhMuc_DanhMucKhoaHoc", foreignKey: "IDDanhMuc"});
+  DanhMucKhoaHoc.hasMany(KhoaHoc, { as: "KhoaHocs", foreignKey: "IDDanhMuc"});
+  ThanhToan.belongsTo(DonHang, { as: "IDDonHang_DonHang", foreignKey: "IDDonHang"});
+  DonHang.hasMany(ThanhToan, { as: "ThanhToans", foreignKey: "IDDonHang"});
+  BlackList.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(BlackList, { as: "BlackLists", foreignKey: "IDKhoaHoc"});
+  Cmt.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(Cmt, { as: "Cmts", foreignKey: "IDKhoaHoc"});
+  DonHang.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(DonHang, { as: "DonHangs", foreignKey: "IDKhoaHoc"});
+  GhiDanh.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(GhiDanh, { as: "GhiDanhs", foreignKey: "IDKhoaHoc"});
+  GioHang.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(GioHang, { as: "GioHangs", foreignKey: "IDKhoaHoc"});
+  Hashtag.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(Hashtag, { as: "Hashtags", foreignKey: "IDKhoaHoc"});
+  KhoaHocYeuThich.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(KhoaHocYeuThich, { as: "KhoaHocYeuThiches", foreignKey: "IDKhoaHoc"});
+  KiemDuyetKhoaHoc.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(KiemDuyetKhoaHoc, { as: "KiemDuyetKhoaHocs", foreignKey: "IDKhoaHoc"});
+  NhanXet.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(NhanXet, { as: "NhanXets", foreignKey: "IDKhoaHoc"});
+  TracNghiem.belongsTo(KhoaHoc, { as: "IDKhoaHoc_KhoaHoc", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.hasMany(TracNghiem, { as: "TracNghiems", foreignKey: "IDKhoaHoc"});
+  KhoaHoc.belongsTo(KhuyenMai, { as: "IDKhuyenMai_KhuyenMai", foreignKey: "IDKhuyenMai"});
+  KhuyenMai.hasMany(KhoaHoc, { as: "KhoaHocs", foreignKey: "IDKhuyenMai"});
+  BlackList.belongsTo(NguoiDung, { as: "IDNguoiDungAdmin_NguoiDung", foreignKey: "IDNguoiDungAdmin"});
+  NguoiDung.hasMany(BlackList, { as: "BlackLists", foreignKey: "IDNguoiDungAdmin"});
+  Cmt.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(Cmt, { as: "Cmts", foreignKey: "IDNguoiDung"});
+  DonHang.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(DonHang, { as: "DonHangs", foreignKey: "IDNguoiDung"});
+  FollowAuthor.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(FollowAuthor, { as: "FollowAuthors", foreignKey: "IDNguoiDung"});
+  FollowAuthor.belongsTo(NguoiDung, { as: "IDNguoiDungGiangVien_NguoiDung", foreignKey: "IDNguoiDungGiangVien"});
+  NguoiDung.hasMany(FollowAuthor, { as: "IDNguoiDungGiangVien_FollowAuthors", foreignKey: "IDNguoiDungGiangVien"});
+  GhiDanh.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(GhiDanh, { as: "GhiDanhs", foreignKey: "IDNguoiDung"});
+  GioHang.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(GioHang, { as: "GioHangs", foreignKey: "IDNguoiDung"});
+  KhoaHoc.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(KhoaHoc, { as: "KhoaHocs", foreignKey: "IDNguoiDung"});
+  KhoaHocYeuThich.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(KhoaHocYeuThich, { as: "KhoaHocYeuThiches", foreignKey: "IDNguoiDung"});
+  KiemDuyetKhoaHoc.belongsTo(NguoiDung, { as: "IDNguoiDungAdmin_NguoiDung", foreignKey: "IDNguoiDungAdmin"});
+  NguoiDung.hasMany(KiemDuyetKhoaHoc, { as: "KiemDuyetKhoaHocs", foreignKey: "IDNguoiDungAdmin"});
+  NhanXet.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(NhanXet, { as: "NhanXets", foreignKey: "IDNguoiDung"});
+  ThongBao.belongsTo(NguoiDung, { as: "IDNguoiDung_NguoiDung", foreignKey: "IDNguoiDung"});
+  NguoiDung.hasMany(ThongBao, { as: "ThongBaos", foreignKey: "IDNguoiDung"});
+  DonHang.belongsTo(ThanhToan, { as: "IDThanhToan_ThanhToan", foreignKey: "IDThanhToan"});
+  ThanhToan.hasMany(DonHang, { as: "DonHangs", foreignKey: "IDThanhToan"});
 
   return {
-    ADMIN,
-    BINHLUAN,
-    BLACKLIST,
-    DANHMUC,
-    GIANGVIEN,
-    GIOHANG,
-    HASHTAG,
-    HOCVIEN,
-    KHOAHOC,
-    NHANXET,
-    THANHTOAN,
-    THEODOI,
+    BlackList,
+    Cmt,
+    DanhMucKhoaHoc,
+    DonHang,
+    FollowAuthor,
+    GhiDanh,
+    GioHang,
+    Hashtag,
+    KhoaHoc,
+    KhoaHocYeuThich,
+    KhuyenMai,
+    KiemDuyetKhoaHoc,
+    NguoiDung,
+    NhanXet,
+    ThanhToan,
+    ThongBao,
+    TracNghiem,
   };
 }

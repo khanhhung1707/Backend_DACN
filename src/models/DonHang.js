@@ -1,10 +1,10 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class GioHang extends Model {
+export default class DonHang extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    IDGioHang: {
+    IDDonHang: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -18,21 +18,37 @@ export default class GioHang extends Model {
         key: 'IDNguoiDung'
       }
     },
+    NgayMua: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    TongTien: {
+      type: DataTypes.DECIMAL(10,2),
+      allowNull: true
+    },
+    TrangThai: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    IDThanhToan: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'ThanhToan',
+        key: 'IDThanhToan'
+      }
+    },
     IDKhoaHoc: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'KhoaHoc',
         key: 'IDKhoaHoc'
       }
-    },
-    SoLuong: {
-      type: DataTypes.INTEGER,
-      allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'GioHang',
+    tableName: 'DonHang',
     timestamps: false,
     indexes: [
       {
@@ -40,7 +56,7 @@ export default class GioHang extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "IDGioHang" },
+          { name: "IDDonHang" },
         ]
       },
       {
@@ -51,7 +67,14 @@ export default class GioHang extends Model {
         ]
       },
       {
-        name: "IDKhoaHoc",
+        name: "FK_DonHang_ThanhToan",
+        using: "BTREE",
+        fields: [
+          { name: "IDThanhToan" },
+        ]
+      },
+      {
+        name: "FK_DonHang_KhoaHoc",
         using: "BTREE",
         fields: [
           { name: "IDKhoaHoc" },

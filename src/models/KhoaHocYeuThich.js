@@ -1,43 +1,34 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class BINHLUAN extends Model {
+export default class KhoaHocYeuThich extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_binh_luan: {
+    IDKhoaHocYeuThich: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ma_khoa_hoc: {
+    IDNguoiDung: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'KHOAHOC',
-        key: 'ma_khoa_hoc'
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
       }
     },
-    ma_hoc_vien: {
+    IDKhoaHoc: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'HOCVIEN',
-        key: 'ma_hoc_vien'
+        model: 'KhoaHoc',
+        key: 'IDKhoaHoc'
       }
-    },
-    noi_dung: {
-      type: DataTypes.TEXT,
-      allowNull: true
-    },
-    ngay_binh_luan: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
     }
   }, {
     sequelize,
-    tableName: 'BINHLUAN',
+    tableName: 'KhoaHocYeuThich',
     timestamps: false,
     indexes: [
       {
@@ -45,21 +36,21 @@ export default class BINHLUAN extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_binh_luan" },
+          { name: "IDKhoaHocYeuThich" },
         ]
       },
       {
-        name: "ma_khoa_hoc",
+        name: "IDNguoiDung",
         using: "BTREE",
         fields: [
-          { name: "ma_khoa_hoc" },
+          { name: "IDNguoiDung" },
         ]
       },
       {
-        name: "ma_hoc_vien",
+        name: "IDKhoaHoc",
         using: "BTREE",
         fields: [
-          { name: "ma_hoc_vien" },
+          { name: "IDKhoaHoc" },
         ]
       },
     ]

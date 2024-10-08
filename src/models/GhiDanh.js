@@ -1,18 +1,22 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class Hashtag extends Model {
+export default class GhiDanh extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    IDHashTag: {
+    IDGhiDanh: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    HashTagName: {
-      type: DataTypes.STRING(255),
-      allowNull: false
+    IDNguoiDung: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
+      }
     },
     IDKhoaHoc: {
       type: DataTypes.INTEGER,
@@ -21,10 +25,14 @@ export default class Hashtag extends Model {
         model: 'KhoaHoc',
         key: 'IDKhoaHoc'
       }
+    },
+    ThoiGianGhiDanh: {
+      type: DataTypes.DATE,
+      allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'Hashtag',
+    tableName: 'GhiDanh',
     timestamps: false,
     indexes: [
       {
@@ -32,7 +40,14 @@ export default class Hashtag extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "IDHashTag" },
+          { name: "IDGhiDanh" },
+        ]
+      },
+      {
+        name: "IDNguoiDung",
+        using: "BTREE",
+        fields: [
+          { name: "IDNguoiDung" },
         ]
       },
       {

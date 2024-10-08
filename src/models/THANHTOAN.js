@@ -1,43 +1,42 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class THANHTOAN extends Model {
+export default class ThanhToan extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_thanh_toan: {
+    IDThanhToan: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ma_hoc_vien: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'HOCVIEN',
-        key: 'ma_hoc_vien'
-      }
-    },
-    ma_khoa_hoc: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'KHOAHOC',
-        key: 'ma_khoa_hoc'
-      }
-    },
-    so_tien: {
-      type: DataTypes.DECIMAL(10,2),
+    NgayThanhToan: {
+      type: DataTypes.DATEONLY,
       allowNull: false
     },
-    ngay_thanh_toan: {
-      type: DataTypes.DATE,
+    PhuongThucThanhToan: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    NoiDungThanhToan: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    TongTien: {
+      type: DataTypes.DECIMAL(10,2),
+      allowNull: true
+    },
+    IDDonHang: {
+      type: DataTypes.INTEGER,
       allowNull: true,
-      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+      references: {
+        model: 'DonHang',
+        key: 'IDDonHang'
+      }
     }
   }, {
     sequelize,
-    tableName: 'THANHTOAN',
+    tableName: 'ThanhToan',
     timestamps: false,
     indexes: [
       {
@@ -45,21 +44,14 @@ export default class THANHTOAN extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_thanh_toan" },
+          { name: "IDThanhToan" },
         ]
       },
       {
-        name: "ma_hoc_vien",
+        name: "FK_ThanhToan_DonHang",
         using: "BTREE",
         fields: [
-          { name: "ma_hoc_vien" },
-        ]
-      },
-      {
-        name: "ma_khoa_hoc",
-        using: "BTREE",
-        fields: [
-          { name: "ma_khoa_hoc" },
+          { name: "IDDonHang" },
         ]
       },
     ]

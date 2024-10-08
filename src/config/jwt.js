@@ -1,9 +1,20 @@
 
 import jwt from 'jsonwebtoken'
 
-export const createToken = (data) => {
-    return jwt.sign({ data: data }, "DACN_HUNGHAU", { algorithm: "HS256", expiresIn: "5m" }) 
-}
+export const createToken = (user) => {
+    const { IDNguoiDung, TenDangNhap, Email, HoTen, SDT, Role, AnhDaiDien } = user;
+    const payload = {
+        id: IDNguoiDung,
+        username: TenDangNhap,
+        email: Email,
+        fullName: HoTen,
+        phone: SDT,
+        role: Role, 
+        avatar: AnhDaiDien,
+    };
+
+    return jwt.sign({ data: payload }, "DACN_HUNGHAU", { algorithm: "HS256", expiresIn: "1h" });
+};
 
 export const verifyToken = (token) => {
 

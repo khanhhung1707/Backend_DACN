@@ -1,30 +1,38 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class BLACKLIST extends Model {
+export default class BlackList extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    ma_blacklist: {
+    IDBlackList: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    ma_khoa_hoc: {
+    IDNguoiDungAdmin: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
-        model: 'KHOAHOC',
-        key: 'ma_khoa_hoc'
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
       }
     },
-    ly_do: {
+    IDKhoaHoc: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'KhoaHoc',
+        key: 'IDKhoaHoc'
+      }
+    },
+    LyDo: {
       type: DataTypes.TEXT,
       allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'BLACKLIST',
+    tableName: 'BlackList',
     timestamps: false,
     indexes: [
       {
@@ -32,14 +40,21 @@ export default class BLACKLIST extends Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "ma_blacklist" },
+          { name: "IDBlackList" },
         ]
       },
       {
-        name: "ma_khoa_hoc",
+        name: "IDNguoiDungAdmin",
         using: "BTREE",
         fields: [
-          { name: "ma_khoa_hoc" },
+          { name: "IDNguoiDungAdmin" },
+        ]
+      },
+      {
+        name: "IDKhoaHoc",
+        using: "BTREE",
+        fields: [
+          { name: "IDKhoaHoc" },
         ]
       },
     ]
