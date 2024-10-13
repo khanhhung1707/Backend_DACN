@@ -207,6 +207,65 @@ export const getCourseDetail = async (req, res) => {
     }
 };
 
+// Tìm kiếm khóa học theo tên
+export const searchCoursesByName = async (req, res) => {
+    const { name } = req.query; // Lấy tên khóa học từ query parameters
+
+    if (!name) {
+        return responseData(res, 400, "Tên khóa học là bắt buộc", null);
+    }
+
+    try {
+        const courses = await model.KhoaHoc.findAll({
+            where: {
+                TenKhoaHoc: {
+                    [Op.like]: `%${name}%` // Sử dụng Op.like để tìm kiếm tương đối
+                }
+            }
+        });
+
+        if (!courses || courses.length === 0) {
+            return responseData(res, 404, "Không tìm thấy khóa học nào", null);
+        }
+
+        return responseData(res, 200, "Lấy danh sách khóa học thành công", courses);
+    } catch (error) {
+        return responseData(res, 500, "Lỗi khi tìm kiếm khóa học", error);
+    }
+};
+
+// Tìm kiếm khóa học theo tên danh mục
+export const searchCoursesByCategory = async (req, res) => {
+    const { categoryName } = req.query; // Lấy tên danh mục từ query parameters
+
+    if (!categoryName) {
+        return responseData(res, 400, "Tên danh mục là bắt buộc", null);
+    }
+
+    try {
+        const courses = await model.KhoaHoc.findAll({
+            include: [{
+                model: model.DanhMucKhoaHoc,
+                as: "IDDanhMuc_DanhMucKhoaHoc", // Sử dụng alias đã định nghĩa trong init-models.js
+                where: {
+                    tenDanhMuc: { // Giả sử bạn có một trường tên 'tenDanhMuc' trong DanhMucKhoaHoc
+                        [Op.like]: `%${categoryName}%` // Tìm kiếm tương đối
+                    }
+                }
+            }]
+        });
+
+        if (!courses || courses.length === 0) {
+            return responseData(res, 404, "Không tìm thấy khóa học nào trong danh mục này", null);
+        }
+
+        return responseData(res, 200, "Lấy danh sách khóa học thành công", courses);
+    } catch (error) {
+        console.error("Error in searchCoursesByCategory:", error); // Ghi log lỗi
+        return responseData(res, 500, "Lỗi khi tìm kiếm khóa học", error.message);
+    }
+};
+
 
 
 

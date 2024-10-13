@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllCourses, getCourseDetail, getFreeCourses, getHotCourses, getPaidCourses, getRecommendedCourses, getTrendingCourses } from '../controllers/courseController.js';
+import { getAllCourses, getCourseDetail, getFreeCourses, getHotCourses, getPaidCourses, getRecommendedCourses, getTrendingCourses, searchCoursesByCategory,  searchCoursesByName } from '../controllers/courseController.js';
 import { isAuthenticated } from '../middleware/auth.js';
 
 
@@ -19,4 +19,9 @@ courseRouter.get('/khoa-hoc/hot',isAuthenticated, getHotCourses);
 courseRouter.get('/khoa-hoc/trending',isAuthenticated, getTrendingCourses);
 // Route xem chi tiết khóa học
 courseRouter.get('/khoa-hoc/xem-chi-tiet/:id',isAuthenticated, getCourseDetail);
+// Route tìm kiếm khóa học theo tên
+courseRouter.get('/khoa-hoc/tim-kiem-theo-ten',isAuthenticated, searchCoursesByName);
+// Route tìm kiếm khóa học theo danh mục
+courseRouter.get('/khoa-hoc/tim-kiem-theo-danh-muc',isAuthenticated, searchCoursesByCategory);
+
 export default courseRouter;
