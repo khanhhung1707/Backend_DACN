@@ -236,7 +236,7 @@ export const searchCoursesByName = async (req, res) => {
 
 // Tìm kiếm khóa học theo tên danh mục
 export const searchCoursesByCategory = async (req, res) => {
-    const { categoryName } = req.query; // Lấy tên danh mục từ query parameters
+    const { categoryName } = req.query; 
 
     if (!categoryName) {
         return responseData(res, 400, "Tên danh mục là bắt buộc", null);
@@ -246,10 +246,10 @@ export const searchCoursesByCategory = async (req, res) => {
         const courses = await model.KhoaHoc.findAll({
             include: [{
                 model: model.DanhMucKhoaHoc,
-                as: "IDDanhMuc_DanhMucKhoaHoc", // Sử dụng alias đã định nghĩa trong init-models.js
+                as: "IDDanhMuc_DanhMucKhoaHoc", 
                 where: {
-                    tenDanhMuc: { // Giả sử bạn có một trường tên 'tenDanhMuc' trong DanhMucKhoaHoc
-                        [Op.like]: `%${categoryName}%` // Tìm kiếm tương đối
+                    tenDanhMuc: { 
+                        [Op.like]: `%${categoryName}%`
                     }
                 }
             }]
@@ -261,7 +261,6 @@ export const searchCoursesByCategory = async (req, res) => {
 
         return responseData(res, 200, "Lấy danh sách khóa học thành công", courses);
     } catch (error) {
-        console.error("Error in searchCoursesByCategory:", error); // Ghi log lỗi
         return responseData(res, 500, "Lỗi khi tìm kiếm khóa học", error.message);
     }
 };
@@ -276,8 +275,6 @@ export const createCourse = async (req, res) => {
             return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
         }
 
-        console.log("Dữ liệu đầu vào hợp lệ, tiếp tục tạo khóa học...");
-
         // Tạo khóa học trong bảng KhoaHocChuaDuyet
         const newCourse = await model.KhoaHocChuaDuyet.create({
             TenKhoaHoc,
@@ -288,14 +285,11 @@ export const createCourse = async (req, res) => {
             GiaTien,
             TrangThai: 'chua_duyet', // Đặt trạng thái ban đầu là chưa duyệt
             NgayGuiKiemDuyet: new Date(),  
-            IDNguoiDung: req.user.id // Kiểm tra req.user.id có hợp lệ
+            IDNguoiDung: req.user.id 
         });
-
-        console.log("Khóa học đã được tạo:", newCourse);
 
         return responseData(res, 201, "Tạo khóa học thành công, chờ duyệt", newCourse);
     } catch (error) {
-        console.error("Lỗi trong quá trình tạo khóa học:", error);
         return responseData(res, 500, "Lỗi khi tạo khóa học", error);
     }
 };
@@ -312,7 +306,6 @@ export const updateCourse = async (req, res) => {
             return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
         }
 
-        console.log(`Đang cập nhật khóa học với ID: ${id}`);
 
         // Tìm khóa học cần cập nhật
         const course = await model.KhoaHoc.findByPk(id);
@@ -334,14 +327,11 @@ export const updateCourse = async (req, res) => {
             LoaiKhoaHoc,
             IDDanhMuc,
             GiaTien,
-            NgayCapNhat: new Date()  // Cập nhật thời gian
+            NgayCapNhat: new Date()  
         });
-
-        console.log("Khóa học đã được cập nhật:", course);
 
         return responseData(res, 200, "Cập nhật khóa học thành công", course);
     } catch (error) {
-        console.error("Lỗi khi cập nhật khóa học:", error);
         return responseData(res, 500, "Lỗi khi cập nhật khóa học", error);
     }
 };

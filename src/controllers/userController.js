@@ -31,7 +31,6 @@ export const updateUserProfile = async (req, res) => {
 
         return responseData(res, 200, "Cập nhật thông tin cá nhân thành công", user);
     } catch (error) {
-        console.error("Error during updateUserProfile:", error);
         return responseData(res, 500, "Lỗi khi cập nhật thông tin cá nhân", error);
     }
 };
@@ -63,7 +62,6 @@ export const getKhoaHocByGiangVien = async (req, res) => {
   
       return res.json(khoaHocList);
     } catch (error) {
-      console.error(error);
       return res.status(500).json({ message: 'Lỗi máy chủ' });
     }
   };

@@ -67,8 +67,8 @@ export const signIn = async (req, res) => {
 };
 
 // Tạo mật khẩu ngẫu nhiên
-const generateRandomPassword = () => {
-    return crypto.randomBytes(8).toString('hex'); // Tạo mật khẩu ngẫu nhiên 16 ký tự
+        const generateRandomPassword = () => {
+        return crypto.randomBytes(8).toString('hex'); // Tạo mật khẩu ngẫu nhiên 8 ký tự
 };
 
 // API quên mật khẩu
@@ -86,12 +86,12 @@ export const forgotPassword = async (req, res) => {
         // Tạo mật khẩu mới
         const newPassword = generateRandomPassword();
 
-        // Hash mật khẩu mới
+        
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Cập nhật mật khẩu mới trong cơ sở dữ liệu
         await model.NguoiDung.update(
-            { MatKhau: hashedPassword }, // Cập nhật mật khẩu đã hash
+            { MatKhau: hashedPassword },
             { where: { Email } }
         );
 
@@ -104,13 +104,11 @@ export const forgotPassword = async (req, res) => {
         return responseData(res, 200, "Mật khẩu mới đã được gửi qua email của bạn");
 
     } catch (error) {
-        console.error(error);
         return responseData(res, 500, "Lỗi máy chủ", error);
     }
 };
 
 // Đổi mật khẩu (reset password)
-// Hàm thay đổi mật khẩu
 export const changePassword = async (req, res) => {
     const { oldPassword, newPassword } = req.body;
 
@@ -136,7 +134,6 @@ export const changePassword = async (req, res) => {
 
         return responseData(res, 200, "Đã thay đổi mật khẩu thành công", null);
     } catch (error) {
-        console.error("Error during changePassword:", error);
         return responseData(res, 500, "Có lỗi xảy ra", null);
     }
 };

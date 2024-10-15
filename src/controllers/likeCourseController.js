@@ -5,7 +5,7 @@ import sequelize from '../models/connect.js';
 const model = initModels(sequelize);
 
 export const addFavoriteCourse = async (req, res) => {
-    const { IDKhoaHoc } = req.params; // Lấy IDKhoaHoc từ params
+    const { IDKhoaHoc } = req.params; 
 
     if (!IDKhoaHoc) {
         return responseData(res, 400, "ID khóa học là bắt buộc", null);
@@ -13,13 +13,12 @@ export const addFavoriteCourse = async (req, res) => {
 
     try {
         const newFavorite = await model.KhoaHocYeuThich.create({
-            IDKhoaHoc, // Gán ID khóa học
-            IDNguoiDung: req.user.id, // Nếu bạn lưu ID người dùng
+            IDKhoaHoc, 
+            IDNguoiDung: req.user.id, 
         });
 
         return responseData(res, 201, "Thêm khóa học yêu thích thành công", newFavorite);
     } catch (error) {
-        console.error(error);
         return responseData(res, 500, "Có lỗi xảy ra khi thêm khóa học yêu thích", error);
     }
 };
@@ -35,8 +34,8 @@ export const getFavoriteCoursesByUser = async (req, res) => {
             where: { IDNguoiDung },
             include: [
                 {
-                    model: model.KhoaHoc, // Bảng khóa học được alias với KhoaHocYeuThich
-                    as: 'IDKhoaHoc_KhoaHoc', // Sử dụng alias từ init-models.js
+                    model: model.KhoaHoc, 
+                    as: 'IDKhoaHoc_KhoaHoc', 
                     attributes: ['IDKhoaHoc', 'TenKhoaHoc', 'MoTaKhoaHoc', 'HinhAnh', 'GiaTien']
                 }
             ]
@@ -50,8 +49,6 @@ export const getFavoriteCoursesByUser = async (req, res) => {
         // Trả về danh sách khóa học yêu thích
         return responseData(res, 200, "Danh sách khóa học yêu thích", favoriteCourses);
     } catch (error) {
-        // Ghi log lỗi để kiểm tra chi tiết
-        console.error("Lỗi khi lấy danh sách khóa học yêu thích:", error);
 
         // Trả về lỗi
         return responseData(res, 500, "Lỗi khi lấy danh sách khóa học yêu thích", error);
@@ -60,7 +57,7 @@ export const getFavoriteCoursesByUser = async (req, res) => {
 
 // bỏ khóa học yêu thích
 export const removeFavoriteCourse = async (req, res) => {
-    const { IDKhoaHoc } = req.params; // Lấy ID khóa học từ params
+    const { IDKhoaHoc } = req.params; 
 
     if (!IDKhoaHoc) {
         return responseData(res, 400, "ID khóa học là bắt buộc", null);
@@ -81,7 +78,6 @@ export const removeFavoriteCourse = async (req, res) => {
 
         return responseData(res, 200, "Bỏ khóa học yêu thích thành công", null);
     } catch (error) {
-        console.error("Lỗi khi bỏ khóa học yêu thích:", error);
         return responseData(res, 500, "Lỗi khi bỏ khóa học yêu thích", error);
     }
 };

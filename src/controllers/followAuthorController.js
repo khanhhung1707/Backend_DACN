@@ -17,7 +17,7 @@ export const followAuthor = async (req, res) => {
             return res.status(404).json({ message: 'Người dùng không tồn tại' });
         }
 
-        // Tìm giảng viên trong bảng NguoiDung bằng ID và Role 'giangvien'
+        // Tìm giảng viên trong bảng NguoiDung
         const giangVien = await model.NguoiDung.findOne({
             where: {
                 IDNguoiDung: IDNguoiDungGiangVien,
@@ -53,7 +53,6 @@ export const followAuthor = async (req, res) => {
             follow: newFollow
         });
     } catch (error) {
-        console.error('Error in followAuthor:', error); // Log lỗi ra console
         return res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
 };

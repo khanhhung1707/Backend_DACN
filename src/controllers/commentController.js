@@ -68,10 +68,10 @@ export const postCommentByCourseId = async (req, res) => {
 
         // Tạo bình luận mới trong cơ sở dữ liệu
         const newComment = await model.BinhLuan.create({
-            IDKhoaHoc: id,          // ID khóa học từ params
-            IDNguoiDung: IDNguoiDung, // ID người dùng từ token
-            NoiDung: NoiDung,       // Nội dung bình luận từ body
-            ThoiGian: new Date(),   // Tự động lấy ngày bình luận hiện tại
+            IDKhoaHoc: id,          
+            IDNguoiDung: IDNguoiDung, 
+            NoiDung: NoiDung,       
+            ThoiGian: new Date(),  
         });
 
         // Trả về kết quả sau khi tạo thành công
