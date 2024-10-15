@@ -20,6 +20,26 @@ export const isAdmin = (req, res, next) => {
   next();  // Nếu role là admin, tiếp tục thực hiện request
 };
 
+// Middleware kiểm tra xem người dùng có phải giảng viên không
+export const isGiangVien = (req, res, next) => {
+  if (!req.user) {
+    return responseData(res, 403, "Không tìm thấy thông tin người dùng", null);
+  }
+
+  if (!req.user.role) {
+    return responseData(res, 403, "Không tìm thấy quyền truy cập của người dùng", null);
+  }
+
+  const { role } = req.user;
+
+  if (role !== 'giangvien') {
+    return responseData(res, 403, "Bạn không có quyền truy cập", null);
+  }
+
+  next();  // Nếu role là giảng viên, tiếp tục thực hiện request
+};
+
+
 // Middleware kiểm tra người dùng đã đăng nhập
 export const isAuthenticated = (req, res, next) => {
     const token = req.header('Authorization')?.split(' ')[1];

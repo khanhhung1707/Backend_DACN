@@ -52,3 +52,32 @@ export const getCommentsByCourseId = async (req, res) => {
     }
 };
 
+// Gửi bình luận theo ID khóa học
+export const postCommentByCourseId = async (req, res) => {
+    try {
+        const { id } = req.params; // Lấy ID khóa học từ params
+        const { NoiDung } = req.body; // Lấy nội dung bình luận từ body của request
+
+        // Lấy ID người dùng từ token đã được giải mã trong middleware isAuthenticated
+        const IDNguoiDung = req.user.id;
+
+        // Kiểm tra xem nội dung bình luận có tồn tại hay không
+        if (!NoiDung) {
+            return responseData(res, 400, "Thiếu nội dung bình luận", null);
+        }
+
+        // Tạo bình luận mới trong cơ sở dữ liệu
+        const newComment = await model.BinhLuan.create({
+            IDKhoaHoc: id,          // ID khóa học từ params
+            IDNguoiDung: IDNguoiDung, // ID người dùng từ token
+            NoiDung: NoiDung,       // Nội dung bình luận từ body
+            ThoiGian: new Date(),   // Tự động lấy ngày bình luận hiện tại
+        });
+
+        // Trả về kết quả sau khi tạo thành công
+        return responseData(res, 201, "Gửi bình luận thành công", newComment);
+    } catch (error) {
+        return responseData(res, 500, "Lỗi khi gửi bình luận", error);
+    }
+};
+

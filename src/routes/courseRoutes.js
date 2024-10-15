@@ -1,6 +1,6 @@
 import express from 'express';
-import { getAllCourses, getCourseDetail, getFreeCourses, getHotCourses, getPaidCourses, getRecommendedCourses, getTrendingCourses, searchCoursesByCategory,  searchCoursesByName } from '../controllers/courseController.js';
-import { isAuthenticated } from '../middleware/auth.js';
+import { createCourse, getAllCourses, getCourseDetail, getFreeCourses, getHotCourses, getPaidCourses, getRecommendedCourses, getTrendingCourses, searchCoursesByCategory,  searchCoursesByName, updateCourse } from '../controllers/courseController.js';
+import { isAuthenticated, isGiangVien } from '../middleware/auth.js';
 
 
 const courseRouter = express.Router();
@@ -23,5 +23,9 @@ courseRouter.get('/khoa-hoc/xem-chi-tiet/:id',isAuthenticated, getCourseDetail);
 courseRouter.get('/khoa-hoc/tim-kiem-theo-ten',isAuthenticated, searchCoursesByName);
 // Route tìm kiếm khóa học theo danh mục
 courseRouter.get('/khoa-hoc/tim-kiem-theo-danh-muc',isAuthenticated, searchCoursesByCategory);
+// Route để tạo khóa học, chỉ giảng viên mới có quyền
+courseRouter.post('/khoa-hoc',isAuthenticated, isGiangVien, createCourse);
+// Route chỉnh sửa khóa học của giảng viên đó tạo
+courseRouter.put('/khoa-hoc/:id', isAuthenticated, isGiangVien, updateCourse);
 
 export default courseRouter;

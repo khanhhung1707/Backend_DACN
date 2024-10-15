@@ -26,6 +26,10 @@ export default class NguoiDung extends Model {
       type: DataTypes.STRING(255),
       allowNull: false
     },
+    GioiTinh: {
+      type: DataTypes.ENUM('nam','nu'),
+      allowNull: false
+    },
     SDT: {
       type: DataTypes.STRING(15),
       allowNull: true

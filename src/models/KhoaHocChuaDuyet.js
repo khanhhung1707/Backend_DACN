@@ -1,7 +1,7 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class KhoaHoc extends Model {
+export default class KhoaHocChuaDuyet extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
     IDKhoaHoc: {
@@ -20,11 +20,7 @@ export default class KhoaHoc extends Model {
     },
     IDKhuyenMai: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'KhuyenMai',
-        key: 'IDKhuyenMai'
-      }
+      allowNull: true
     },
     IDDanhMuc: {
       type: DataTypes.INTEGER,
@@ -46,36 +42,25 @@ export default class KhoaHoc extends Model {
       type: DataTypes.STRING(255),
       allowNull: true
     },
-    NgayDang: {
-      type: DataTypes.DATEONLY,
-      allowNull: false
-    },
-    LuotXem: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 0
-    },
-    SoLuongHocVien: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      defaultValue: 0
-    },
-    GiamGia: {
-      type: DataTypes.DECIMAL(5,2),
-      allowNull: true
-    },
     LoaiKhoaHoc: {
-      type: DataTypes.ENUM('tra_phi','mien_phi'),
-      allowNull: false,
-      defaultValue: "mien_phi"
+      type: DataTypes.ENUM('mien_phi','tra_phi'),
+      allowNull: false
     },
     GiaTien: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    NgayGuiKiemDuyet: {
+      type: DataTypes.DATEONLY,
+      allowNull: false
+    },
+    TrangThai: {
+      type: DataTypes.ENUM('chua_duyet','da_duyet'),
+      allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'KhoaHoc',
+    tableName: 'KhoaHocChuaDuyet',
     timestamps: false,
     indexes: [
       {
@@ -98,13 +83,6 @@ export default class KhoaHoc extends Model {
         using: "BTREE",
         fields: [
           { name: "IDDanhMuc" },
-        ]
-      },
-      {
-        name: "IDKhuyenMai",
-        using: "BTREE",
-        fields: [
-          { name: "IDKhuyenMai" },
         ]
       },
     ]

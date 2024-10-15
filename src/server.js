@@ -7,6 +7,8 @@ import nhanXetRouter from './routes/nhanXetRoutes.js';
 import regisCoursetRouter from './routes/registerCourseRoutes.js';
 import ordertRouter from './routes/orderRoutes.js';
 import likeCourseRouter from './routes/likeCourseController.js';
+import followAuthorRouter from './routes/followAuthorRoutes.js';
+import userRouter from './routes/userRoutes.js';
 
 const app = express();
 app.use(cors())
@@ -19,5 +21,7 @@ app.use(nhanXetRouter)
 app.use(regisCoursetRouter)
 app.use(ordertRouter)
 app.use(likeCourseRouter)
+app.use(userRouter)
+app.use(followAuthorRouter)
 
 app.listen(8080)

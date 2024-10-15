@@ -266,6 +266,85 @@ export const searchCoursesByCategory = async (req, res) => {
     }
 };
 
+//Tạo khóa học (only giảng viên)
+export const createCourse = async (req, res) => {
+    try {
+        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien } = req.body;
+
+        // Kiểm tra dữ liệu đầu vào
+        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien) {
+            return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
+        }
+
+        console.log("Dữ liệu đầu vào hợp lệ, tiếp tục tạo khóa học...");
+
+        // Tạo khóa học trong bảng KhoaHocChuaDuyet
+        const newCourse = await model.KhoaHocChuaDuyet.create({
+            TenKhoaHoc,
+            MoTaKhoaHoc,
+            HinhAnh,
+            LoaiKhoaHoc,
+            IDDanhMuc,
+            GiaTien,
+            TrangThai: 'chua_duyet', // Đặt trạng thái ban đầu là chưa duyệt
+            NgayGuiKiemDuyet: new Date(),  
+            IDNguoiDung: req.user.id // Kiểm tra req.user.id có hợp lệ
+        });
+
+        console.log("Khóa học đã được tạo:", newCourse);
+
+        return responseData(res, 201, "Tạo khóa học thành công, chờ duyệt", newCourse);
+    } catch (error) {
+        console.error("Lỗi trong quá trình tạo khóa học:", error);
+        return responseData(res, 500, "Lỗi khi tạo khóa học", error);
+    }
+};
+
+// Chỉnh sửa khóa học của giảng viên đó tạo
+export const updateCourse = async (req, res) => {
+    try {
+        const { id } = req.params; // Lấy id khóa học từ params
+        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien } = req.body;
+        const userId = req.user.id; // Lấy ID người dùng từ token sau khi xác thực
+
+        // Kiểm tra dữ liệu đầu vào
+        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien) {
+            return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
+        }
+
+        console.log(`Đang cập nhật khóa học với ID: ${id}`);
+
+        // Tìm khóa học cần cập nhật
+        const course = await model.KhoaHoc.findByPk(id);
+
+        if (!course) {
+            return responseData(res, 404, "Không tìm thấy khóa học", null);
+        }
+
+        // Kiểm tra xem giảng viên đang đăng nhập có phải là người tạo ra khóa học không
+        if (course.IDNguoiDung !== userId) {
+            return responseData(res, 403, "Bạn không có quyền chỉnh sửa khóa học này", null);
+        }
+
+        // Cập nhật khóa học
+        await course.update({
+            TenKhoaHoc,
+            MoTaKhoaHoc,
+            HinhAnh,
+            LoaiKhoaHoc,
+            IDDanhMuc,
+            GiaTien,
+            NgayCapNhat: new Date()  // Cập nhật thời gian
+        });
+
+        console.log("Khóa học đã được cập nhật:", course);
+
+        return responseData(res, 200, "Cập nhật khóa học thành công", course);
+    } catch (error) {
+        console.error("Lỗi khi cập nhật khóa học:", error);
+        return responseData(res, 500, "Lỗi khi cập nhật khóa học", error);
+    }
+};
 
 
 
