@@ -336,5 +336,5 @@ export const updateCourse = async (req, res) => {
     }
 };
 
-
+// xóa khóa học
 

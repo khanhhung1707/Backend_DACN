@@ -10,7 +10,7 @@ const model = initModels(sequelize);
 
 //Đăng ký
 export const signUp = async (req, res) => {
-    const { TenDangNhap, Email, MatKhau, HoTen, SDT, Role, AnhDaiDien } = req.body;
+    const { TenDangNhap, Email, MatKhau, HoTen, SDT, Role, AnhDaiDien,GioiTinh } = req.body;
 
     try {
         const existingUser = await model.NguoiDung.findOne({ where: { Email } });
@@ -26,6 +26,7 @@ export const signUp = async (req, res) => {
             HoTen,
             SDT,
             Role,
+            GioiTinh,
             AnhDaiDien,
         });
 
