@@ -337,4 +337,35 @@ export const updateCourse = async (req, res) => {
 };
 
 // xóa khóa học
+export const deleteCourse = async (req, res) => {
+    try {
+        const { id } = req.params; 
+        const userId = req.user.id; 
+
+        console.log(`Đang xóa khóa học với ID: ${id}`);
+
+        // Tìm khóa học cần xóa
+        const course = await model.KhoaHoc.findByPk(id);
+
+        if (!course) {
+            return responseData(res, 404, "Không tìm thấy khóa học", null);
+        }
+
+        // Kiểm tra xem giảng viên đang đăng nhập có phải là người tạo ra khóa học không
+        if (course.IDNguoiDung !== userId) {
+            return responseData(res, 403, "Bạn không có quyền xóa khóa học này", null);
+        }
+
+        // Xóa tất cả các bình luận liên quan trước
+        await model.BinhLuan.destroy({ where: { IDKhoaHoc: id } });
+
+        // Xóa khóa học
+        await course.destroy();
+
+        return responseData(res, 200, "Xóa khóa học thành công", null);
+    } catch (error) {
+        return responseData(res, 500, "Lỗi khi xóa khóa học", error);
+    }
+};
+
 

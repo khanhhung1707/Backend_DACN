@@ -1,5 +1,5 @@
 import express from 'express';
-import { createCourse, getAllCourses, getCourseDetail, getFreeCourses, getHotCourses, getPaidCourses, getRecommendedCourses, getTrendingCourses, searchCoursesByCategory,  searchCoursesByName, updateCourse } from '../controllers/courseController.js';
+import { createCourse, deleteCourse, getAllCourses, getCourseDetail, getFreeCourses, getHotCourses, getPaidCourses, getRecommendedCourses, getTrendingCourses, searchCoursesByCategory,  searchCoursesByName, updateCourse } from '../controllers/courseController.js';
 import { isAuthenticated, isGiangVien } from '../middleware/auth.js';
 
 
@@ -27,5 +27,8 @@ courseRouter.get('/khoa-hoc/tim-kiem-theo-danh-muc',isAuthenticated, searchCours
 courseRouter.post('/khoa-hoc',isAuthenticated, isGiangVien, createCourse);
 // Route chỉnh sửa khóa học của giảng viên đó tạo
 courseRouter.put('/khoa-hoc/:id', isAuthenticated, isGiangVien, updateCourse);
+// Route xóa khóa học của giảng viên đó tạo
+courseRouter.delete('/khoa-hoc/:id',isAuthenticated, isGiangVien, deleteCourse);
+
 
 export default courseRouter;
