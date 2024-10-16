@@ -19,8 +19,8 @@ export const layDonHangNguoiDung = async (req, res) => {
                     as: 'IDKhoaHoc_KhoaHoc' // Đừng quên chỉ định alias nếu có
                 },
                 {
-                    model: model.ThanhToan, // Liên kết với bảng ThanhToan
-                    as: 'IDThanhToan_ThanhToan' // Alias cho ThanhToan
+                    model: model.ThanhToan, 
+                    as: 'IDThanhToan_ThanhToan' 
                 }
             ]
         });

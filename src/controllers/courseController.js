@@ -297,9 +297,9 @@ export const createCourse = async (req, res) => {
 // Chỉnh sửa khóa học của giảng viên đó tạo
 export const updateCourse = async (req, res) => {
     try {
-        const { id } = req.params; // Lấy id khóa học từ params
+        const { id } = req.params; 
         const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien } = req.body;
-        const userId = req.user.id; // Lấy ID người dùng từ token sau khi xác thực
+        const userId = req.user.id; 
 
         // Kiểm tra dữ liệu đầu vào
         if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien) {

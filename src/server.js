@@ -11,6 +11,31 @@ import followAuthorRouter from './routes/followAuthorRoutes.js';
 import userRouter from './routes/userRoutes.js';
 
 const app = express();
+
+import swaggerUi from 'swagger-ui-express'
+import swaggerJsDoc from 'swagger-jsdoc'
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: "API Documentation",
+            version: "1.0.0",
+            description: "API Information",
+            contact: {
+                name: "Developer",
+            },
+            servers: ["http://localhost:8080"],
+        },
+    },
+    apis: ["src/swagger/index.js"], 
+};
+const specs = swaggerJsDoc(options);
+// app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/swagger", swaggerUi.serve, (req, res, next) => {
+    next();
+}, swaggerUi.setup(specs));
+
+
 app.use(cors())
 app.use(express.json());
 
