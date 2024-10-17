@@ -1,4 +1,3 @@
-
 /**
  * @swagger
  * /signup:
@@ -24,8 +23,15 @@
  *                 type: string
  *               Role:
  *                 type: string
+ *                 enum:
+ *                   - hocvien
+ *                   - giangvien
+ *                   - admin
  *               GioiTinh:
  *                 type: string
+ *                 enum:
+ *                   - nam
+ *                   - nu
  *               AnhDaiDien:
  *                 type: string
  *     responses:
@@ -35,7 +41,9 @@
  *         description: Email đã tồn tại
  *       500:
  *         description: Lỗi khi đăng ký
-
+ */
+/**
+ * @swagger
  * /login:
  *   post:
  *     description: Đăng nhập học viên
@@ -62,7 +70,9 @@
  *         description: Mật khẩu không chính xác
  *       500:
  *         description: Lỗi khi đăng nhập
- 
+ */
+/**
+ * @swagger
  * /forgot-password:
  *   post:
  *     description: Quên mật khẩu
@@ -83,7 +93,9 @@
  *         description: Người dùng không tồn tại
  *       500:
  *         description: Lỗi máy chủ
-
+ */
+/**
+ * @swagger
  * /change-password:
  *   post:
  *     description: Đổi mật khẩu cho học viên đã đăng nhập
@@ -111,7 +123,6 @@
  *       500:
  *         description: Có lỗi xảy ra
  */
-
 /**
  * @swagger
  * /binh-luan:
@@ -143,8 +154,10 @@
  *         description: Không tìm thấy bình luận
  *       500:
  *         description: Lỗi máy chủ
- 
- * /binh-luan/{id}:
+ */
+/**
+ * @swagger
+ * /binh-luan/get/:id:
  *   get:
  *     summary: Lấy bình luận theo ID khóa học
  *     tags: [Comments]
@@ -180,8 +193,10 @@
  *         description: Không tìm thấy bình luận
  *       500:
  *         description: Lỗi máy chủ
- 
- * /binh-luan/{id}:
+ */
+/**
+ * @swagger
+ * /binh-luan/delete/{id}:
  *   post:
  *     summary: Gửi bình luận theo ID khóa học
  *     tags: [Comments]
@@ -224,7 +239,6 @@
  *       500:
  *         description: Lỗi máy chủ
  */
-
 /**
  * @swagger
  * /khoa-hoc:
@@ -257,7 +271,9 @@
  *         description: Không tìm thấy khóa học nào
  *       500:
  *         description: Lỗi khi lấy danh sách khóa học
-
+ */
+/**
+ * @swagger
  * /khoa-hoc-de-xuat:
  *   get:
  *     summary: Lấy danh sách khóa học dựa trên lịch sử mua khóa học của người dùng
@@ -290,7 +306,9 @@
  *         description: Người dùng chưa mua khóa học nào
  *       500:
  *         description: Lỗi khi lấy danh sách khóa học đề xuất
- 
+ */
+/**
+ * @swagger
  * /khoa-hoc-tra-phi:
  *   get:
  *     summary: Lấy danh sách khóa học trả phí
@@ -321,7 +339,9 @@
  *         description: Không tìm thấy khóa học trả phí nào
  *       500:
  *         description: Lỗi khi lấy danh sách khóa học trả phí
- 
+ */
+/**
+ * @swagger
  * /khoa-hoc-mien-phi:
  *   get:
  *     summary: Lấy danh sách khóa học miễn phí
@@ -352,7 +372,9 @@
  *         description: Không tìm thấy khóa học miễn phí nào
  *       500:
  *         description: Lỗi khi lấy danh sách khóa học miễn phí
-
+ */
+/**
+ * @swagger
  * /khoa-hoc/hot:
  *   get:
  *     summary: Lấy danh sách khóa học hot
@@ -383,7 +405,9 @@
  *         description: Không tìm thấy khóa học hot nào
  *       500:
  *         description: Lỗi khi lấy danh sách khóa học hot
- 
+ */
+/**
+ * @swagger
  * /khoa-hoc/trending:
  *   get:
  *     summary: Lấy danh sách khóa học xu hướng
@@ -414,7 +438,9 @@
  *         description: Không tìm thấy khóa học xu hướng nào
  *       500:
  *         description: Lỗi khi lấy danh sách khóa học xu hướng
- 
+ */
+/**
+ * @swagger
  * /khoa-hoc/xem-chi-tiet/{id}:
  *   get:
  *     summary: Lấy chi tiết khóa học theo IDKhoaHoc
@@ -477,7 +503,9 @@
  *         description: Không tìm thấy khóa học
  *       500:
  *         description: Lỗi khi lấy chi tiết khóa học
- 
+ */
+/**
+ * @swagger
  * /khoa-hoc/tim-kiem-theo-ten:
  *   get:
  *     summary: Tìm kiếm khóa học theo tên
@@ -517,7 +545,9 @@
  *         description: Không tìm thấy khóa học nào
  *       500:
  *         description: Lỗi khi tìm kiếm khóa học
-
+ */
+/**
+ * @swagger
  * /khoa-hoc/tim-kiem-theo-danh-muc:
  *   get:
  *     summary: Tìm kiếm khóa học theo tên danh mục
@@ -557,8 +587,10 @@
  *         description: Không tìm thấy khóa học nào trong danh mục
  *       500:
  *         description: Lỗi khi tìm kiếm khóa học
- 
- * /khoa-hoc:
+ */
+/**
+ * @swagger
+ * /khoa-hoc/add:
  *   post:
  *     summary: Tạo khóa học (chỉ giảng viên)
  *     tags: [Courses]
@@ -604,8 +636,10 @@
  *         description: Thiếu dữ liệu đầu vào
  *       500:
  *         description: Lỗi khi tạo khóa học
-
- * /khoa-hoc/{id}:
+ */
+/**
+ * @swagger
+ * /khoa-hoc/put/{id}:
  *   put:
  *     summary: Chỉnh sửa khóa học của giảng viên
  *     tags: [Courses]
@@ -654,8 +688,10 @@
  *         description: Thiếu dữ liệu đầu vào
  *       500:
  *         description: Lỗi khi cập nhật khóa học
- 
- * /khoa-hoc/{id}:
+ */
+/**
+ * @swagger
+ * /khoa-hoc/delete/{id}:
  *   delete:
  *     summary: Xóa khóa học của giảng viên
  *     tags: [Courses]
@@ -678,7 +714,6 @@
  *       500:
  *         description: Lỗi khi xóa khóa học
  */
-
 /**
  * @swagger
  * /follow/{IDNguoiDungGiangVien}:
@@ -724,7 +759,9 @@
  *         description: Học viên hoặc giảng viên không tồn tại
  *       500:
  *         description: Lỗi khi theo dõi giảng viên
- 
+ */
+/**
+ * @swagger
  * /followers:
  *   get:
  *     summary: Lấy danh sách học viên theo dõi giảng viên
@@ -771,10 +808,9 @@
  *       500:
  *         description: Lỗi khi lấy danh sách học viên theo dõi
  */
-
 /**
  * @swagger
- * /add-favorite/{IDKhoaHoc}:
+ * /favorite/add/{IDKhoaHoc}:
  *   post:
  *     summary: Thêm khóa học vào danh sách yêu thích của người dùng
  *     tags: [Favorite Courses]
@@ -802,7 +838,9 @@
  *         description: ID khóa học là bắt buộc
  *       500:
  *         description: Có lỗi xảy ra khi thêm khóa học yêu thích
- 
+ */
+/**
+ * @swagger
  * /favorites:
  *   get:
  *     summary: Lấy danh sách khóa học yêu thích theo người dùng
@@ -844,7 +882,9 @@
  *         description: Người dùng chưa có khóa học yêu thích
  *       500:
  *         description: Lỗi khi lấy danh sách khóa học yêu thích
- 
+ */
+/**
+ * @swagger
  * /favorites/{IDKhoaHoc}:
  *   delete:
  *     summary: Bỏ khóa học ra khỏi danh sách yêu thích
@@ -867,20 +907,13 @@
  *         description: ID khóa học là bắt buộc
  *       500:
  *         description: Lỗi khi bỏ khóa học yêu thích
- 
- * /khoa-hoc/nhan-xet/{id}:
+ */
+/**
+ * @swagger
+ * /nhan-xet:
  *   post:
- *     summary: Thêm nhận xét cho khóa học theo IDKhoaHoc
- *     tags: [Comments]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID của khóa học mà nhận xét sẽ được thêm vào
- *         schema:
- *           type: integer
+ *     summary: Thêm nhận xét cho khóa học
+ *     tags: [Evaluate]
  *     requestBody:
  *       required: true
  *       content:
@@ -890,29 +923,17 @@
  *             properties:
  *               noiDung:
  *                 type: string
- *                 description: Nội dung của nhận xét
  *               xepLoai:
  *                 type: integer
- *                 description: Xếp loại của khóa học (ví dụ: 1-5)
  *               thoiGian:
  *                 type: string
  *                 format: date-time
- *                 description: Thời gian tạo nhận xét
  *     responses:
  *       201:
  *         description: Thêm nhận xét thành công
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 IDNhanXet:
- *                   type: integer
- *                   description: ID của nhận xét vừa tạo
  *       500:
  *         description: Có lỗi xảy ra
  */
-
 /**
  * @swagger
  * /don-hang:
@@ -966,7 +987,9 @@
  *         description: Không có đơn hàng nào
  *       500:
  *         description: Lỗi máy chủ
-
+ */
+/**
+ * @swagger
  * /don-hang/all:
  *   get:
  *     summary: Lấy tất cả các đơn hàng

@@ -6,7 +6,7 @@ import { addFavoriteCourse, getFavoriteCoursesByUser, removeFavoriteCourse } fro
 const likeCourseRouter = express.Router();
 
 // Thêm khóa học yêu thích
-likeCourseRouter.post('/add-favorite/:IDKhoaHoc',isAuthenticated, addFavoriteCourse);
+likeCourseRouter.post('/favorite/add/:IDKhoaHoc',isAuthenticated, addFavoriteCourse);
 // Route lấy danh sách khóa học yêu thích theo người dùng
 likeCourseRouter.get('/favorites',isAuthenticated, getFavoriteCoursesByUser);
 // Route bỏ khóa học yêu thích

@@ -26,6 +26,44 @@ const options = {
             },
             servers: ["http://localhost:8080"],
         },
+        tags: [
+            {
+                name: 'Auth',
+                description: 'Các chức năng liên quan đến xác thực',
+            },
+            {
+                name: 'Evaluate',
+                description: 'Các chức năng liên quan đến nhận xét',
+            },
+            {
+                name: 'Comments',
+                description: 'Các chức năng liên quan đến bình luận',
+            },
+            {
+                name: 'Courses',
+                description: 'Các chức năng liên quan đến khóa học',
+            },
+            {
+                name: 'Follow',
+                description: 'Các chức năng liên quan đến theo dõi',
+            },
+            {
+                name: 'Favorite Courses',
+                description: 'Các chức năng liên quan đến khóa học ưa thích',
+            },
+            {
+                name: 'Orders',
+                description: 'Các chức năng liên quan đến đơn hàng',
+            },
+            {
+                name: 'Regis Courses',
+                description: 'Các chức năng liên quan đến khóa học đăng ký',
+            },
+            {
+                name: 'User',
+                description: 'Các chức năng liên quan đến người dùng',
+            },
+        ],
     },
     apis: ["src/swagger/index.js"], 
 };

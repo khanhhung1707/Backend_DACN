@@ -25,7 +25,7 @@ export const signUp = async (req, res) => {
             MatKhau: hashedPassword,
             HoTen,
             SDT,
-            Role,
+            Role: 'hocvien',
             GioiTinh,
             AnhDaiDien,
         });

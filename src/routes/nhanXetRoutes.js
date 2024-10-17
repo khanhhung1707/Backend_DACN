@@ -6,6 +6,6 @@ import { themNhanXet } from '../controllers/nhanXetController.js';
 const nhanXetRouter = express.Router();
 
 //endpoint cho thêm nhận xét
-nhanXetRouter.post('/nhan-xet/:id',isAuthenticated, themNhanXet);
+nhanXetRouter.post('/nhan-xet/:IDKhoaHoc',isAuthenticated, themNhanXet);
 
 export default nhanXetRouter;

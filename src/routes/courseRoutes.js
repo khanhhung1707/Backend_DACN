@@ -24,11 +24,11 @@ courseRouter.get('/khoa-hoc/tim-kiem-theo-ten',isAuthenticated, searchCoursesByN
 // Route tìm kiếm khóa học theo danh mục
 courseRouter.get('/khoa-hoc/tim-kiem-theo-danh-muc',isAuthenticated, searchCoursesByCategory);
 // Route để tạo khóa học, chỉ giảng viên mới có quyền
-courseRouter.post('/khoa-hoc',isAuthenticated, isGiangVien, createCourse);
+courseRouter.post('/khoa-hoc/add',isAuthenticated, isGiangVien, createCourse);
 // Route chỉnh sửa khóa học của giảng viên đó tạo
-courseRouter.put('/khoa-hoc/:id', isAuthenticated, isGiangVien, updateCourse);
+courseRouter.put('/khoa-hoc/put/:id', isAuthenticated, isGiangVien, updateCourse);
 // Route xóa khóa học của giảng viên đó tạo
-courseRouter.delete('/khoa-hoc/:id',isAuthenticated, isGiangVien, deleteCourse);
+courseRouter.delete('/khoa-hoc/delete/:id',isAuthenticated, isGiangVien, deleteCourse);
 
 
 export default courseRouter;
