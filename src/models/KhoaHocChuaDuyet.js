@@ -55,7 +55,7 @@ export default class KhoaHocChuaDuyet extends Model {
       allowNull: false
     },
     TrangThai: {
-      type: DataTypes.ENUM('chua_duyet','da_duyet'),
+      type: DataTypes.ENUM('chua_duyet','da_duyet','tu_choi'),
       allowNull: false
     }
   }, {

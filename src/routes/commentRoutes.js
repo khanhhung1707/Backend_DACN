@@ -10,7 +10,7 @@ commentRouter.get('/binh-luan',isAuthenticated,isAdmin, getAllComments);
 // Route để lấy bình luận theo ID khóa học
 commentRouter.get('/binh-luan/get/:id', isAuthenticated, getCommentsByCourseId);
 //Route để gửi bình luận theo ID khóa học
-commentRouter.post('/binh-luan/delete/:id',isAuthenticated, postCommentByCourseId);
+commentRouter.post('/binh-luan/post/:id',isAuthenticated, postCommentByCourseId);
 
 
 export default commentRouter;

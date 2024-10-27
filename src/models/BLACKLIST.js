@@ -10,7 +10,7 @@ export default class BlackList extends Model {
       allowNull: false,
       primaryKey: true
     },
-    IDNguoiDungAdmin: {
+    IDNguoiDung: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -28,6 +28,23 @@ export default class BlackList extends Model {
     },
     LyDo: {
       type: DataTypes.TEXT,
+      allowNull: true
+    },
+    NgayThemVaoBlackList: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    HinhAnh: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    LoaiKhoaHoc: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    GiaTien: {
+      type: DataTypes.INTEGER,
       allowNull: true
     }
   }, {
@@ -47,7 +64,7 @@ export default class BlackList extends Model {
         name: "IDNguoiDungAdmin",
         using: "BTREE",
         fields: [
-          { name: "IDNguoiDungAdmin" },
+          { name: "IDNguoiDung" },
         ]
       },
       {
