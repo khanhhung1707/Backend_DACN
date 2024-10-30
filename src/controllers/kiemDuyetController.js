@@ -37,11 +37,11 @@ export const layDanhSachKhoaHocKiemDuyet = async (req, res) => {
 // kiểm duyệt khóa học 
 export const kiemDuyetKhoaHoc = async (req, res) => {
     const { idKhoaHoc, trangThai, lyDo } = req.body;
-    
+
     // Log giá trị đầu vào
     console.log("idKhoaHoc:", idKhoaHoc);
     console.log("trangThai:", trangThai);
-    
+
     try {
         const khoaHoc = await model.KhoaHocChuaDuyet.findOne({
             where: { IDKhoaHoc: idKhoaHoc },
@@ -51,28 +51,36 @@ export const kiemDuyetKhoaHoc = async (req, res) => {
             return responseData(res, 404, "Khóa học không tồn tại");
         }
 
-        const { 
-            IDNguoiDung, 
-            IDDanhMuc, 
-            TenKhoaHoc, 
-            MoTaKhoaHoc, 
-            HinhAnh, 
-            LoaiKhoaHoc, 
-            GiaTien 
-        } = khoaHoc.dataValues; 
-        
-        // Log thông tin khóa học
-        console.log("KhoaHoc:", khoaHoc.dataValues);
+        // Log dữ liệu khóa học để kiểm tra từng trường
+        console.log("Dữ liệu khóa học:", khoaHoc.dataValues);
+
+        const {
+            IDNguoiDung,
+            TenKhoaHoc,
+            MoTaKhoaHoc,
+            HinhAnh,
+            LoaiKhoaHoc,
+            IDDanhMuc,
+            GiaTien,
+            IDKhuyenMai,
+            LuotXem,
+            SoLuongHocVien,
+            GiamGia,
+        } = khoaHoc.dataValues;
 
         if (trangThai === "duyet") {
             await model.KhoaHoc.create({
                 IDNguoiDung,
-                IDDanhMuc,
                 TenKhoaHoc,
                 MoTaKhoaHoc,
                 HinhAnh,
                 LoaiKhoaHoc,
+                IDDanhMuc,
                 GiaTien,
+                IDKhuyenMai,
+                LuotXem,
+                SoLuongHocVien,
+                GiamGia,
                 TrangThai: 'da_duyet',
                 NgayDang: new Date()
             });
@@ -83,13 +91,32 @@ export const kiemDuyetKhoaHoc = async (req, res) => {
 
             return responseData(res, 200, "Khóa học đã được duyệt và thêm vào danh sách khóa học");
         } else if (trangThai === "tu_choi") {
+            // Kiểm tra và log dữ liệu để đảm bảo tính nhất quán trước khi chèn vào BlackList
+            console.log("Chuyển khóa học vào BlackList với các giá trị sau:");
+            console.log("IDNguoiDung:", IDNguoiDung);
+            console.log("IDKhoaHoc:", idKhoaHoc);
+            console.log("LyDo:", lyDo);
+            console.log("TenKhoaHoc:", TenKhoaHoc);
+            console.log("MoTaKhoaHoc:", MoTaKhoaHoc);
+            console.log("HinhAnh:", HinhAnh);
+            console.log("LoaiKhoaHoc:", LoaiKhoaHoc);
+            console.log("IDDanhMuc:", IDDanhMuc);
+            console.log("GiaTien:", GiaTien);
+            console.log("IDKhuyenMai:", IDKhuyenMai);
+            console.log("GiamGia:", GiamGia);
+
             await model.BlackList.create({
                 IDNguoiDung,
                 IDKhoaHoc: idKhoaHoc,
                 LyDo: lyDo,
+                TenKhoaHoc,
+                MoTaKhoaHoc,
                 HinhAnh,
                 LoaiKhoaHoc,
+                IDDanhMuc,
                 GiaTien,
+                IDKhuyenMai,
+                GiamGia,
                 NgayThemVaoBlackList: new Date()
             });
 
@@ -106,6 +133,7 @@ export const kiemDuyetKhoaHoc = async (req, res) => {
         return responseData(res, 500, "Có lỗi xảy ra: " + error.message);
     }
 };
+
 
 
 

@@ -268,10 +268,10 @@ export const searchCoursesByCategory = async (req, res) => {
 //Tạo khóa học (only giảng viên)
 export const createCourse = async (req, res) => {
     try {
-        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien } = req.body;
+        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien, IDKhuyenMai, LuotXem, SoLuongHocVien, GiamGia } = req.body;
 
         // Kiểm tra dữ liệu đầu vào
-        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien) {
+        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien || !IDKhuyenMai || !LuotXem || !SoLuongHocVien || !GiamGia) {
             return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
         }
 
@@ -283,7 +283,11 @@ export const createCourse = async (req, res) => {
             LoaiKhoaHoc,
             IDDanhMuc,
             GiaTien,
-            TrangThai: 'chua_duyet', // Đặt trạng thái ban đầu là chưa duyệt
+            IDKhuyenMai,
+            LuotXem,
+            SoLuongHocVien, 
+            GiamGia,
+            TrangThai: 'chua_duyet', 
             NgayGuiKiemDuyet: new Date(),  
             IDNguoiDung: req.user.id 
         });
@@ -298,11 +302,11 @@ export const createCourse = async (req, res) => {
 export const updateCourse = async (req, res) => {
     try {
         const { id } = req.params; 
-        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien } = req.body;
+        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien, IDKhuyenMai, LuotXem, SoLuongHocVien, GiamGia } = req.body;
         const userId = req.user.id; 
 
         // Kiểm tra dữ liệu đầu vào
-        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien) {
+        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien || !IDKhuyenMai || !LuotXem || !SoLuongHocVien || !GiamGia) {
             return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
         }
 
@@ -327,6 +331,10 @@ export const updateCourse = async (req, res) => {
             LoaiKhoaHoc,
             IDDanhMuc,
             GiaTien,
+            IDKhuyenMai,
+            LuotXem,
+            SoLuongHocVien, 
+            GiamGia,
             NgayCapNhat: new Date()  
         });
 

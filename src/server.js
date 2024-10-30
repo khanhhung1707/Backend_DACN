@@ -16,6 +16,8 @@ import swaggerUi from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
 import kiemDuyetRoute from './routes/kiemDuyetRoutes.js';
 import blackListRoute from './routes/blackListRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
+import blockUserRoute from './routes/blockUserRoutes.js';
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -90,5 +92,7 @@ app.use(userRouter)
 app.use(followAuthorRouter)
 app.use(kiemDuyetRoute)
 app.use(blackListRoute)
+app.use(categoryRoutes)
+app.use(blockUserRoute)
 
 app.listen(8080)
