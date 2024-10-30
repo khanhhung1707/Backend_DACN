@@ -5,7 +5,7 @@ import { chanNguoiDung, xemDanhSachNguoiDungChan } from '../controllers/blockUse
 const blockUserRoute = express.Router();
 
 //chặn học viên
-blockUserRoute.post('/block/hocvien/:id',isAuthenticated,isAdmin, chanNguoiDung);
+blockUserRoute.post('/block/:id',isAuthenticated,isAdmin, chanNguoiDung);
 //xem danh sách tất cả người dùng bị chặn
 blockUserRoute.get('/block/all',isAuthenticated,isAdmin, xemDanhSachNguoiDungChan);
 

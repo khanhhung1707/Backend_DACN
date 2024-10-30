@@ -18,6 +18,7 @@ import kiemDuyetRoute from './routes/kiemDuyetRoutes.js';
 import blackListRoute from './routes/blackListRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import blockUserRoute from './routes/blockUserRoutes.js';
+import promotionRoute from './routes/promotionRoutes.js';
 const options = {
     definition: {
         openapi: '3.0.0',
@@ -94,5 +95,6 @@ app.use(kiemDuyetRoute)
 app.use(blackListRoute)
 app.use(categoryRoutes)
 app.use(blockUserRoute)
+app.use(promotionRoute)
 
 app.listen(8080)
