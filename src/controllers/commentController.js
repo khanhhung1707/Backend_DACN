@@ -2,6 +2,7 @@ import initModels from "../models/init-models.js";
 import { responseData } from '../config/response.js';
 import sequelize from '../models/connect.js';
 import { Op } from 'sequelize';
+import { sendEmail } from "../config/mail.js";
 
 const model = initModels(sequelize);
 
@@ -22,6 +23,7 @@ export const getAllComments = async (req, res) => {
     }
 };
 
+//lấy bình luận theo ID Khóa học
 export const getCommentsByCourseId = async (req, res) => {
     try {
         const { id } = req.params; // Lấy ID khóa học từ params
@@ -52,6 +54,41 @@ export const getCommentsByCourseId = async (req, res) => {
     }
 };
 
+// Hàm gửi email thông báo đến giảng viên hoặc học viên khi có bình luận hoặc phản hồi
+export const sendNotificationToCommenters = async (commenterId, replyToId, commentType) => {
+    try {
+        // Lấy thông tin người bình luận và người nhận thông báo từ bảng NguoiDung
+        const commenter = await model.NguoiDung.findByPk(commenterId);
+        const replyToUser = await model.NguoiDung.findByPk(replyToId);
+
+        if (!commenter || !replyToUser) {
+            return { status: 404, message: "Người dùng không tồn tại" };
+        }
+
+        const { HoTen: HoTenNguoiBinhLuan, Email: EmailNguoiBinhLuan } = commenter.dataValues;
+        const { HoTen: HoTenNguoiNhanThongBao, Email: EmailNguoiNhanThongBao } = replyToUser.dataValues;
+
+        // Tạo chủ đề và nội dung thông báo tùy theo loại bình luận hoặc phản hồi
+        let subject, text;
+        if (commentType === 'comment') {
+            subject = "Thông báo về bình luận khóa học";
+            text = `${HoTenNguoiBinhLuan} đã bình luận về khóa học của bạn. Hãy vào xem ngay!`;
+        } else if (commentType === 'reply') {
+            subject = "Thông báo phản hồi bình luận";
+            text = `${HoTenNguoiBinhLuan} đã trả lời bình luận của bạn về khóa học. Hãy vào xem ngay!`;
+        }
+
+        // Gửi email thông báo
+        await sendEmail(EmailNguoiNhanThongBao, subject, text);
+
+        return { status: 200, message: `Thông báo đã được gửi tới ${HoTenNguoiNhanThongBao}` };
+
+    } catch (error) {
+        console.error("Lỗi gửi thông báo:", error);
+        return { status: 500, message: "Lỗi gửi thông báo" };
+    }
+};
+
 // Gửi bình luận theo ID khóa học
 export const postCommentByCourseId = async (req, res) => {
     try {
@@ -74,10 +111,50 @@ export const postCommentByCourseId = async (req, res) => {
             ThoiGian: new Date(),  
         });
 
+        // Sau khi tạo bình luận thành công, gửi thông báo cho giảng viên (người tạo khóa học)
+        const khoaHoc = await model.KhoaHoc.findOne({ where: { IDKhoaHoc: id } });
+        if (khoaHoc) {
+            const { IDNguoiDung: giangVienId } = khoaHoc; // Lấy ID giảng viên tạo khóa học
+            await sendNotificationToCommenters(IDNguoiDung, giangVienId, 'comment', res); // Gửi thông báo cho giảng viên
+        }
+
         // Trả về kết quả sau khi tạo thành công
         return responseData(res, 201, "Gửi bình luận thành công", newComment);
     } catch (error) {
         return responseData(res, 500, "Lỗi khi gửi bình luận", error);
+    }
+};
+
+// reply comment 
+export const postReplyToComment = async (req, res) => {
+    try {
+        const { commentId } = req.params; // Sử dụng commentId từ params
+        const { NoiDung } = req.body;
+
+        const IDNguoiDung = req.user.id;
+
+        if (!NoiDung) {
+            return responseData(res, 400, "Thiếu nội dung phản hồi", null);
+        }
+
+        const originalComment = await model.BinhLuan.findByPk(Number(commentId)); // Đảm bảo commentId là kiểu số
+        if (!originalComment) {
+            return responseData(res, 404, "Bình luận không tồn tại", null);
+        }
+
+        const newReply = await model.ReplyBinhLuan.create({
+            IDBinhLuan: commentId,
+            IDNguoiDung: IDNguoiDung,
+            NoiDung: NoiDung,
+            ThoiGian: new Date(),
+            IDKhoaHoc: originalComment.IDKhoaHoc
+        });
+
+        await sendNotificationToCommenters(IDNguoiDung, originalComment.IDNguoiDung, 'reply', res);
+
+        return responseData(res, 201, "Gửi phản hồi thành công", newReply);
+    } catch (error) {
+        return responseData(res, 500, "Lỗi khi gửi phản hồi", error);
     }
 };
 

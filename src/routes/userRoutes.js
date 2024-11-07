@@ -27,7 +27,7 @@ userRouter.get('/hocvien/:idNguoiDung',isAuthenticated,isAdmin, getChiTietNguoiD
 userRouter.put('/hocvien/cap-nhat-role/:id',isAuthenticated,isAdmin, capNhatRoleHocVien);
 
 // Lấy danh sách giảng viên
-userRouter.get('/giangvien/all',isAuthenticated,isAdmin, getNguoiDungGiangVien);
+userRouter.get('/giangvien/all',isAuthenticated, getNguoiDungGiangVien);
 // Thêm giảng viên mới
 userRouter.post('/giangvien/add',isAuthenticated,isAdmin, themNguoiDungGiangVien);
 // Sửa thông tin giảng viên theo ID

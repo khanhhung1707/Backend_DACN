@@ -69,7 +69,7 @@ export const signIn = async (req, res) => {
 
 // Tạo mật khẩu ngẫu nhiên
         const generateRandomPassword = () => {
-        return crypto.randomBytes(8).toString('hex'); // Tạo mật khẩu ngẫu nhiên 8 ký tự
+        return crypto.randomBytes(8).toString('hex'); 
 };
 
 // API quên mật khẩu
