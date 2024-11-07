@@ -18,19 +18,27 @@ CREATE TABLE `BinhLuan` (
   KEY `IDNguoiDung` (`IDNguoiDung`),
   CONSTRAINT `BinhLuan_ibfk_1` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `BinhLuan_ibfk_2` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `BlackList` (
   `IDBlackList` int NOT NULL AUTO_INCREMENT,
-  `IDNguoiDungAdmin` int NOT NULL,
+  `IDNguoiDung` int NOT NULL,
+  `IDKhuyenMai` int DEFAULT NULL,
+  `IDDanhMuc` int DEFAULT NULL,
+  `TenKhoaHoc` varchar(255) DEFAULT NULL,
+  `MoTaKhoaHoc` text,
   `IDKhoaHoc` int NOT NULL,
-  `LyDo` text,
+  `LyDo` varchar(255) DEFAULT 'không phù hợp',
+  `NgayThemVaoBlackList` datetime DEFAULT CURRENT_TIMESTAMP,
+  `HinhAnh` varchar(255) DEFAULT NULL,
+  `LoaiKhoaHoc` varchar(255) DEFAULT NULL,
+  `GiaTien` int DEFAULT NULL,
+  `GiamGia` int DEFAULT NULL,
   PRIMARY KEY (`IDBlackList`),
-  KEY `IDNguoiDungAdmin` (`IDNguoiDungAdmin`),
+  KEY `IDNguoiDungAdmin` (`IDNguoiDung`),
   KEY `IDKhoaHoc` (`IDKhoaHoc`),
-  CONSTRAINT `BlackList_ibfk_1` FOREIGN KEY (`IDNguoiDungAdmin`) REFERENCES `NguoiDung` (`IDNguoiDung`),
-  CONSTRAINT `BlackList_ibfk_2` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `BlackList_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `DangKyKhoaHoc` (
   `IDDangKyKhoaHoc` int NOT NULL AUTO_INCREMENT,
@@ -48,7 +56,7 @@ CREATE TABLE `DanhMucKhoaHoc` (
   `IDDanhMuc` int NOT NULL AUTO_INCREMENT,
   `TenDanhMuc` varchar(255) NOT NULL,
   PRIMARY KEY (`IDDanhMuc`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `DonHang` (
   `IDDonHang` int NOT NULL AUTO_INCREMENT,
@@ -77,7 +85,7 @@ CREATE TABLE `FollowAuthor` (
   KEY `IDNguoiDungGiangVien` (`IDNguoiDungGiangVien`),
   CONSTRAINT `FollowAuthor_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`),
   CONSTRAINT `FollowAuthor_ibfk_2` FOREIGN KEY (`IDNguoiDungGiangVien`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `GhiDanh` (
   `IDGhiDanh` int NOT NULL AUTO_INCREMENT,
@@ -110,7 +118,7 @@ CREATE TABLE `Hashtag` (
   PRIMARY KEY (`IDHashTag`),
   KEY `IDKhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `Hashtag_ibfk_1` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `KhoaHoc` (
   `IDKhoaHoc` int NOT NULL AUTO_INCREMENT,
@@ -126,14 +134,17 @@ CREATE TABLE `KhoaHoc` (
   `GiamGia` decimal(5,2) DEFAULT NULL,
   `LoaiKhoaHoc` enum('tra_phi','mien_phi') NOT NULL DEFAULT 'mien_phi',
   `GiaTien` int DEFAULT NULL,
+  `IDHashTag` int DEFAULT NULL,
   PRIMARY KEY (`IDKhoaHoc`),
   KEY `IDNguoiDung` (`IDNguoiDung`),
   KEY `IDDanhMuc` (`IDDanhMuc`),
   KEY `IDKhuyenMai` (`IDKhuyenMai`),
+  KEY `IDHashTag` (`IDHashTag`),
   CONSTRAINT `KhoaHoc_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`),
   CONSTRAINT `KhoaHoc_ibfk_2` FOREIGN KEY (`IDDanhMuc`) REFERENCES `DanhMucKhoaHoc` (`IDDanhMuc`),
-  CONSTRAINT `KhoaHoc_ibfk_3` FOREIGN KEY (`IDKhuyenMai`) REFERENCES `KhuyenMai` (`IDKhuyenMai`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `KhoaHoc_ibfk_3` FOREIGN KEY (`IDKhuyenMai`) REFERENCES `KhuyenMai` (`IDKhuyenMai`),
+  CONSTRAINT `KhoaHoc_ibfk_4` FOREIGN KEY (`IDHashTag`) REFERENCES `Hashtag` (`IDHashTag`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `KhoaHocChuaDuyet` (
   `IDKhoaHoc` int NOT NULL AUTO_INCREMENT,
@@ -146,13 +157,13 @@ CREATE TABLE `KhoaHocChuaDuyet` (
   `LoaiKhoaHoc` enum('mien_phi','tra_phi') NOT NULL,
   `GiaTien` int DEFAULT NULL,
   `NgayGuiKiemDuyet` date NOT NULL,
-  `TrangThai` enum('chua_duyet','da_duyet') NOT NULL,
+  `TrangThai` enum('chua_duyet','da_duyet','tu_choi') NOT NULL,
   PRIMARY KEY (`IDKhoaHoc`),
   KEY `IDNguoiDung` (`IDNguoiDung`),
   KEY `IDDanhMuc` (`IDDanhMuc`),
   CONSTRAINT `KhoaHocChuaDuyet_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`),
   CONSTRAINT `KhoaHocChuaDuyet_ibfk_2` FOREIGN KEY (`IDDanhMuc`) REFERENCES `DanhMucKhoaHoc` (`IDDanhMuc`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `KhoaHocYeuThich` (
   `IDKhoaHocYeuThich` int NOT NULL AUTO_INCREMENT,
@@ -163,7 +174,7 @@ CREATE TABLE `KhoaHocYeuThich` (
   KEY `IDKhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `KhoaHocYeuThich_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`),
   CONSTRAINT `KhoaHocYeuThich_ibfk_2` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `KhuyenMai` (
   `IDKhuyenMai` int NOT NULL AUTO_INCREMENT,
@@ -174,21 +185,7 @@ CREATE TABLE `KhuyenMai` (
   `NgayBatDau` date DEFAULT NULL,
   `NgayKetThuc` date DEFAULT NULL,
   PRIMARY KEY (`IDKhuyenMai`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-CREATE TABLE `KiemDuyetKhoaHoc` (
-  `IDKiemDuyet` int NOT NULL AUTO_INCREMENT,
-  `IDNguoiDungAdmin` int NOT NULL,
-  `IDKhoaHoc` int NOT NULL,
-  `TrangThai` varchar(255) DEFAULT NULL,
-  `NgayGuiKiemDuyet` date DEFAULT NULL,
-  `NgayDuyet` date DEFAULT NULL,
-  PRIMARY KEY (`IDKiemDuyet`),
-  KEY `IDNguoiDungAdmin` (`IDNguoiDungAdmin`),
-  KEY `IDKhoaHoc` (`IDKhoaHoc`),
-  CONSTRAINT `KiemDuyetKhoaHoc_ibfk_1` FOREIGN KEY (`IDNguoiDungAdmin`) REFERENCES `NguoiDung` (`IDNguoiDung`),
-  CONSTRAINT `KiemDuyetKhoaHoc_ibfk_2` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `NguoiDung` (
   `IDNguoiDung` int NOT NULL AUTO_INCREMENT,
@@ -201,7 +198,19 @@ CREATE TABLE `NguoiDung` (
   `Role` enum('hocvien','giangvien','admin') NOT NULL,
   `AnhDaiDien` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `NguoiDungChan` (
+  `IDNguoiDung` int NOT NULL,
+  `TenDangNhap` varchar(255) NOT NULL,
+  `MatKhau` varchar(255) NOT NULL,
+  `Email` varchar(255) NOT NULL,
+  `HoTen` varchar(255) NOT NULL,
+  `SDT` varchar(15) DEFAULT NULL,
+  `Role` enum('ban') NOT NULL,
+  `GioiTinh` enum('nam','nu') NOT NULL,
+  PRIMARY KEY (`IDNguoiDung`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `NhanXet` (
   `IDNhanXet` int NOT NULL AUTO_INCREMENT,
@@ -215,7 +224,23 @@ CREATE TABLE `NhanXet` (
   KEY `IDNguoiDung` (`IDNguoiDung`),
   CONSTRAINT `NhanXet_ibfk_1` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `NhanXet_ibfk_2` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `ReplyBinhLuan` (
+  `IDRepLyBinhLuan` int NOT NULL AUTO_INCREMENT,
+  `IDBinhLuan` int DEFAULT NULL,
+  `IDNguoiDung` int DEFAULT NULL,
+  `NoiDung` text,
+  `ThoiGian` datetime DEFAULT NULL,
+  `IDKhoaHoc` int DEFAULT NULL,
+  PRIMARY KEY (`IDRepLyBinhLuan`),
+  KEY `IDBinhLuan` (`IDBinhLuan`),
+  KEY `IDNguoiDung` (`IDNguoiDung`),
+  KEY `IDKhoaHoc` (`IDKhoaHoc`),
+  CONSTRAINT `ReplyBinhLuan_ibfk_1` FOREIGN KEY (`IDBinhLuan`) REFERENCES `BinhLuan` (`IDBinhLuan`),
+  CONSTRAINT `ReplyBinhLuan_ibfk_2` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`),
+  CONSTRAINT `ReplyBinhLuan_ibfk_3` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `ThanhToan` (
   `IDThanhToan` int NOT NULL AUTO_INCREMENT,
@@ -262,9 +287,15 @@ INSERT INTO `BinhLuan` (`IDBinhLuan`, `IDKhoaHoc`, `IDNguoiDung`, `NoiDung`, `Th
 (7, 24, 1, 'Một trải nghiệm tuyệt vời! Tôi rất hài lòng.', '2024-10-08 12:35:28'),
 (8, 25, 1, 'Nội dung khóa học phong phú, nhưng cần thời gian để tiếp thu.', '2024-10-08 12:35:28'),
 (9, 26, 2, 'Khóa học rất tuyệt vời, tôi sẽ giới thiệu cho bạn bè.', '2024-10-08 12:35:28'),
-(10, 30, 2, 'Rất thích khóa học này, mong có thêm nhiều khóa học tương tự.', '2024-10-08 12:35:28'),
-(11, 21, 2, 'Đây là bình luận của tôi!', '2024-10-14 16:00:11');
+(11, 21, 2, 'Đây là bình luận của tôi!', '2024-10-14 16:00:11'),
+(12, 23, 2, 'Đây là bình luận của tôi!', '2024-10-18 11:53:16'),
+(13, 23, 2, 'Đây là bình luận của tôi!', '2024-11-06 11:24:26'),
+(14, 23, 2, 'Nội dung bình luận của tôi!', '2024-11-06 11:26:33');
 
+INSERT INTO `BlackList` (`IDBlackList`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `IDKhoaHoc`, `LyDo`, `NgayThemVaoBlackList`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `GiamGia`) VALUES
+(8, 4, 1, 2, 'Lập trình JavaScript 5', 'Khóa học về JavaScript cơ bản và nâng cao', 9, 'không phù hợp', '2024-10-30 09:56:37', 'https://example.com/image.jpg', 'tra_phi', 500000, NULL);
+INSERT INTO `BlackList` (`IDBlackList`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `IDKhoaHoc`, `LyDo`, `NgayThemVaoBlackList`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `GiamGia`) VALUES
+(9, 4, 1, 2, 'Lập trình JavaScript 6', 'Khóa học về JavaScript cơ bản và nâng cao', 10, 'không phù hợp', '2024-11-06 06:37:55', 'https://example.com/image.jpg', 'tra_phi', 500000, NULL);
 
 
 INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
@@ -275,7 +306,7 @@ INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `nga
 (3, 23, 2, '2024-10-08 13:13:22');
 INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
 (4, 24, 2, '2024-10-08 13:13:22'),
-(5, 28, 2, '2024-10-08 13:13:22'),
+(5, 27, 2, '2024-10-08 13:13:22'),
 (6, 29, 2, '2024-10-08 13:13:22'),
 (7, 30, 2, '2024-10-08 13:13:22'),
 (8, 25, 2, '2024-10-08 14:26:18'),
@@ -305,32 +336,50 @@ INSERT INTO `DonHang` (`IDDonHang`, `IDNguoiDung`, `NgayMua`, `TongTien`, `Trang
 
 INSERT INTO `FollowAuthor` (`IDFollowAuthor`, `IDNguoiDung`, `IDNguoiDungGiangVien`, `NgayFollow`) VALUES
 (1, 2, 4, '2024-10-14');
+INSERT INTO `FollowAuthor` (`IDFollowAuthor`, `IDNguoiDung`, `IDNguoiDungGiangVien`, `NgayFollow`) VALUES
+(2, 1, 4, '2024-10-15');
 
 
 
 
 
 
+INSERT INTO `Hashtag` (`IDHashTag`, `HashTagName`, `IDKhoaHoc`) VALUES
+(1, '#khoahocnoibat', 28);
+INSERT INTO `Hashtag` (`IDHashTag`, `HashTagName`, `IDKhoaHoc`) VALUES
+(2, '#khoahocbanchay', 29);
 
 
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`) VALUES
-(21, 1, 1, 1, 'Khóa học Lập trình Java', 'Khóa học cơ bản đến nâng cao về lập trình Java.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 150000);
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`) VALUES
-(22, 1, 2, 2, 'Khóa học Lập trình Python', 'Khóa học học lập trình Python từ cơ bản đến nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 200000);
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`) VALUES
-(23, 1, 3, 3, 'Phát triển Web với HTML, CSS và JavaScript', 'Khóa học giúp bạn xây dựng các trang web chuyên nghiệp.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'tra_phi', 300000);
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`) VALUES
-(24, 1, 2, 1, 'Khóa học Lập trình Python nâng cao', 'Khóa học học lập trình Python nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'tra_phi', 150000),
-(25, 1, 3, 1, 'Python trick', 'Khóa học giúp bạn có thêm những cách code ngắn gọn và nhanh hơn trong ngôn ngữ Python.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 200000),
-(26, 1, 1, 4, 'Khóa học Lập trình C#', 'Khóa học cơ bản lập trình C#.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 350000),
-(27, 1, 2, 5, 'Khóa học khoa học dữ liệu', 'Những kiến thức cơ bản về khoa học dữ liệu', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 400000),
-(28, 4, 3, 6, 'Khóa học trí tuệ nhân tạo', 'Khóa học giúp bạn hiểu thêm về trí tuệ nhân tạo', 'link_hinh_anh_moi.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 1000000),
-(29, 4, 2, 7, 'Khóa học Phát triển ứng dụng di động', 'Khóa học cơ bản Phát triển ứng dụng di động', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 500000),
-(30, 4, 3, 8, 'Khóa học An ninh mạng', 'Hiểu thêm về an ninh mạng thông qua khóa học', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 900000);
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`) VALUES
+(21, 1, 1, 1, 'Khóa học Lập trình Java', 'Khóa học cơ bản đến nâng cao về lập trình Java.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 150000, NULL);
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`) VALUES
+(22, 1, 2, 2, 'Khóa học Lập trình Python', 'Khóa học học lập trình Python từ cơ bản đến nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 200000, NULL);
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`) VALUES
+(23, 1, 3, 3, 'Phát triển Web với HTML, CSS và JavaScript', 'Khóa học giúp bạn xây dựng các trang web chuyên nghiệp.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'tra_phi', 300000, NULL);
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`) VALUES
+(24, 1, 2, 1, 'Khóa học Lập trình Python nâng cao', 'Khóa học học lập trình Python nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'tra_phi', 150000, NULL),
+(25, 1, 3, 1, 'Python trick', 'Khóa học giúp bạn có thêm những cách code ngắn gọn và nhanh hơn trong ngôn ngữ Python.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 200000, NULL),
+(26, 1, 1, 4, 'Khóa học Lập trình C#', 'Khóa học cơ bản lập trình C#.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 350000, NULL),
+(27, 1, 2, 5, 'Khóa học khoa học dữ liệu', 'Những kiến thức cơ bản về khoa học dữ liệu', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 400000, NULL),
+(28, 4, 3, 6, 'Khóa học trí tuệ nhân tạo', 'Khóa học giúp bạn hiểu thêm về trí tuệ nhân tạo', 'link_hinh_anh_moi.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 1000000, NULL),
+(29, 4, 2, 7, 'Khóa học Phát triển ứng dụng di động', 'Khóa học cơ bản Phát triển ứng dụng di động', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 500000, NULL),
+(30, 4, 3, 8, 'Khóa học An ninh mạng', 'Hiểu thêm về an ninh mạng thông qua khóa học', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 900000, NULL),
+(35, 4, NULL, 6, 'Khóa học java', 'Học java từ cơ bản đến nâng cao', 'https://link-to-image.com/hinhanh.jpg', '2024-10-27', 0, 0, NULL, 'tra_phi', 500000, NULL),
+(36, 4, NULL, 3, 'Khóa Học nâng cao AI', 'Học AI nâng cao', 'https://link-to-image.com/hinhanh.jpg', '2024-10-30', 0, 0, NULL, 'tra_phi', 600000, NULL),
+(50, 4, 1, 2, 'Lập trình JavaScript 3', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, NULL),
+(51, 4, 1, 2, 'Lập trình JavaScript 4', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, NULL),
+(52, 4, 1, 2, 'Lập trình JavaScript 5', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, NULL),
+(53, 4, 1, 2, 'Lập trình JavaScript 6', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, NULL);
 
 INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `NgayGuiKiemDuyet`, `TrangThai`) VALUES
-(1, 4, NULL, 5, 'Khóa học Node.js', 'Học Node.js từ cơ bản đến nâng cao', 'https://link-to-image.com/hinhanh.jpg', 'mien_phi', 500000, '2024-10-15', 'chua_duyet');
-
+(3, 4, 1, 10, 'Khóa Học nâng cao AI', 'Học AI nâng cao', 'https://link-to-image.com/hinhanh.jpg', 'tra_phi', 250000, '2024-10-30', 'chua_duyet');
+INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `NgayGuiKiemDuyet`, `TrangThai`) VALUES
+(28, 4, 1, 2, 'Lập trình JavaScript 7', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-06', 'chua_duyet');
+INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `NgayGuiKiemDuyet`, `TrangThai`) VALUES
+(29, 4, 1, 2, 'Lập trình JavaScript 8', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-06', 'chua_duyet');
+INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `NgayGuiKiemDuyet`, `TrangThai`) VALUES
+(30, 4, 1, 2, 'Lập trình JavaScript 9', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-06', 'chua_duyet'),
+(31, 4, 1, 2, 'Lập trình JavaScript 10', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-06', 'chua_duyet');
 
 INSERT INTO `KhoaHocYeuThich` (`IDKhoaHocYeuThich`, `IDNguoiDung`, `IDKhoaHoc`) VALUES
 (1, 1, 21);
@@ -358,16 +407,20 @@ INSERT INTO `KhuyenMai` (`IDKhuyenMai`, `TenKhuyenMai`, `MoTaKhuyenMai`, `LoaiKh
 (4, 'Khuyến mãi 40%', 'Giảm giá 40% cho khóa học phát triển ứng dụng di động', 'Giảm giá trực tiếp', '40.00', '2024-01-01', '2024-12-31'),
 (5, 'Khuyến mãi 50%', 'Giảm giá 50% cho khóa học máy học', 'Giảm giá trực tiếp', '50.00', '2024-01-01', '2024-12-31');
 
-
-
 INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `GioiTinh`, `SDT`, `Role`, `AnhDaiDien`) VALUES
 (1, 'khanhhungAdmin', '$2b$10$5YPdewSAwkHDcl6NMuohHeW73BiW7JuyGU1Aq9CG0IqU5ukV.MBV6', 'khanhhungAdmin@gmail.com', 'Khánh Hưng Admin', 'nam', '0942212265', 'admin', 'url.png');
 INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `GioiTinh`, `SDT`, `Role`, `AnhDaiDien`) VALUES
-(2, 'khanhhungUser', '$2b$10$W3/7wSzkyltMzfQaCExZaO7P9ZGS83xvSMkUxT8NRbpYVG63M5ToW', 'khanhhungUser@gmail.com', 'Khánh Hưng User cập nhật', 'nam', '0942212265', 'hocvien', 'new-avatar-url.jpg');
+(2, 'khanhhungUser', '$2b$10$W3/7wSzkyltMzfQaCExZaO7P9ZGS83xvSMkUxT8NRbpYVG63M5ToW', 'khanhhunguserdacn@gmail.com', 'Khánh Hưng User cập nhật 2', 'nam', '0942212265', 'hocvien', 'new-avatar-url2.jpg');
 INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `GioiTinh`, `SDT`, `Role`, `AnhDaiDien`) VALUES
-(3, 'khanhhungTest1', '$2b$10$BkJYKufLbzCf399y1Apgg.ewq0p6M/hYlc/vS7WKEf2ePHohAGpES', 'pjlatao999@gmail.com', 'Khánh Hưng Test 1', 'nam', '0942212265', 'hocvien', 'url.png');
+(3, 'khanhhungTest1', '$2b$10$lhSoQ.NW8ZowqY152epxAeWEatTgraIrUsWWtczGGYUOOLLF2rH7u', 'pjlatao999@gmail.com', 'Khánh Hưng Test 1', 'nam', '0942212265', 'giangvien', 'url.png');
 INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `GioiTinh`, `SDT`, `Role`, `AnhDaiDien`) VALUES
-(4, 'khanhhungTeacher', '$2b$10$igxGPRnAEVdWiX4igyaEx.UQFFKtz1jnJzOKRv1HowPbmhEVhGSTq', 'khanhhungTeacher@gmail.com', 'Khánh Hưng Teacher', 'nam', '0942212265', 'giangvien', 'url.png');
+(4, 'khanhhungTeacher', '$2b$10$igxGPRnAEVdWiX4igyaEx.UQFFKtz1jnJzOKRv1HowPbmhEVhGSTq', 'khanhhung.dacs@gmail.com', 'Khánh Hưng Teacher', 'nam', '0942212265', 'giangvien', 'url.png');
+
+INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES
+(7, 'user123', '$2b$10$UZ402FowISrrNVQ/4OaChOQ29pjujoGXiEGcGZeSz2EJlcfHVlmvq', 'user@example.com', 'Nguyen Van A', '0123456789', 'ban', 'nam');
+INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES
+(9, 'giangvien1', '$2b$10$Js8kBvWQolZFF7QG89/LeOT4Py/BgwS04oS1JloGnuCoZ/KKLwrLG', 'giangvien1@example.com', 'Giang Vien 1', '0123456789', 'ban', 'nam');
+
 
 INSERT INTO `NhanXet` (`IDNhanXet`, `IDKhoaHoc`, `IDNguoiDung`, `NoiDung`, `XepLoai`, `ThoiGian`) VALUES
 (1, 21, 1, 'Khóa học rất bổ ích, tôi đã học được nhiều kiến thức mới.', 'tích cực', '2024-10-08 09:48:14');
@@ -396,6 +449,10 @@ INSERT INTO `NhanXet` (`IDNhanXet`, `IDKhoaHoc`, `IDNguoiDung`, `NoiDung`, `XepL
 (21, 21, 2, 'Khóa học rất hữu ích!', 'tích cực', '2024-10-08 12:34:56'),
 (22, 21, 2, 'Khóa học rất dài dòng!', 'tiêu cực', '2024-10-08 12:34:56'),
 (23, 22, 2, 'Khóa học rất dễ hiểu!', 'tích cực', '2024-10-08 12:34:56');
+
+INSERT INTO `ReplyBinhLuan` (`IDRepLyBinhLuan`, `IDBinhLuan`, `IDNguoiDung`, `NoiDung`, `ThoiGian`, `IDKhoaHoc`) VALUES
+(1, 14, 4, 'Đây là phản hồi của tôi', '2024-11-06 11:42:03', 23);
+
 
 INSERT INTO `ThanhToan` (`IDThanhToan`, `NgayThanhToan`, `PhuongThucThanhToan`, `NoiDungThanhToan`, `TongTien`, `IDDonHang`) VALUES
 (1, '2024-10-01', 'Thẻ tín dụng', 'Thanh toán cho đơn hàng 1', '150000.00', 1);
