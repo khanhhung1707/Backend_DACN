@@ -350,11 +350,8 @@ export const deleteCourse = async (req, res) => {
         const { id } = req.params; 
         const userId = req.user.id; 
 
-        console.log(`Đang xóa khóa học với ID: ${id}`);
-
         // Tìm khóa học cần xóa
         const course = await model.KhoaHoc.findByPk(id);
-
         if (!course) {
             return responseData(res, 404, "Không tìm thấy khóa học", null);
         }
@@ -364,7 +361,24 @@ export const deleteCourse = async (req, res) => {
             return responseData(res, 403, "Bạn không có quyền xóa khóa học này", null);
         }
 
-        // Xóa tất cả các bình luận liên quan trước
+        // Xóa tất cả các phản hồi bình luận liên quan trước
+        const relatedComments = await model.BinhLuan.findAll({
+            where: { IDKhoaHoc: id },
+            attributes: ['IDBinhLuan'],
+            raw: true
+        });
+
+        const commentIds = relatedComments.map(binhLuan => binhLuan.IDBinhLuan);
+
+        if (commentIds.length > 0) {
+            await model.ReplyBinhLuan.destroy({
+                where: {
+                    IDBinhLuan: commentIds
+                }
+            });
+        }
+
+        // Xóa tất cả các bình luận liên quan
         await model.BinhLuan.destroy({ where: { IDKhoaHoc: id } });
 
         // Xóa khóa học
@@ -375,5 +389,7 @@ export const deleteCourse = async (req, res) => {
         return responseData(res, 500, "Lỗi khi xóa khóa học", error);
     }
 };
+
+
 
 
