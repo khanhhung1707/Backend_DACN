@@ -9,7 +9,7 @@ export const layDanhSachKhoaHocTrongBlackList = async (req, res) => {
     try {
         // Lấy danh sách tất cả khóa học trong blacklist
         const danhSachBlackList = await model.BlackList.findAll({
-            attributes: ['IDBlackList', 'IDNguoiDung', 'IDKhoaHoc', 'LyDo', 'NgayThemVaoBlackList', 'HinhAnh', 'LoaiKhoaHoc', 'GiaTien', "TenHoaHoc", "MoTaKhoaHoc"],
+            attributes: ['IDBlackList', 'IDNguoiDung', 'IDKhoaHoc', 'LyDo', 'NgayThemVaoBlackList', 'HinhAnh', 'LoaiKhoaHoc', 'GiaTien', "TenKhoaHoc", "MoTaKhoaHoc"],
         });
 
         // Kiểm tra nếu không có khóa học nào trong blacklist

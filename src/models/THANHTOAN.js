@@ -33,6 +33,30 @@ export default class ThanhToan extends Model {
         model: 'DonHang',
         key: 'IDDonHang'
       }
+    },
+    IDNguoiDung: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'NguoiDung',
+        key: 'IDNguoiDung'
+      }
+    },
+    orderId: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    requestId: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    payUrl: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    shortLink: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,
@@ -52,6 +76,13 @@ export default class ThanhToan extends Model {
         using: "BTREE",
         fields: [
           { name: "IDDonHang" },
+        ]
+      },
+      {
+        name: "FK_ThanhToan_NguoiDung",
+        using: "BTREE",
+        fields: [
+          { name: "IDNguoiDung" },
         ]
       },
     ]

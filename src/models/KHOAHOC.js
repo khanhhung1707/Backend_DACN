@@ -72,6 +72,14 @@ export default class KhoaHoc extends Model {
     GiaTien: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    IDHashTag: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Hashtag',
+        key: 'IDHashTag'
+      }
     }
   }, {
     sequelize,
@@ -105,6 +113,13 @@ export default class KhoaHoc extends Model {
         using: "BTREE",
         fields: [
           { name: "IDKhuyenMai" },
+        ]
+      },
+      {
+        name: "IDHashTag",
+        using: "BTREE",
+        fields: [
+          { name: "IDHashTag" },
         ]
       },
     ]

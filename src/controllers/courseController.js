@@ -191,6 +191,11 @@ export const getCourseDetail = async (req, res) => {
                     model: model.KhuyenMai,
                     as: 'IDKhuyenMai_KhuyenMai', 
                     attributes: ['IDKhuyenMai', 'TenKhuyenMai']
+                },
+                {
+                    model: model.Hashtag,
+                    as: 'Hashtags',  
+                    attributes: ['IDHashTag', 'HashTagName']
                 }
             ]
         });
@@ -206,6 +211,7 @@ export const getCourseDetail = async (req, res) => {
         return responseData(res, 500, "Lỗi khi lấy chi tiết khóa học", error);
     }
 };
+
 
 // Tìm kiếm khóa học theo tên
 export const searchCoursesByName = async (req, res) => {
