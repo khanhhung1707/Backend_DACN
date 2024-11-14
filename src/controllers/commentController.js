@@ -54,6 +54,43 @@ export const getCommentsByCourseId = async (req, res) => {
     }
 };
 
+// Lấy bình luận theo ID bình luận
+export const getCommentById = async (req, res) => {
+    try {
+        const { id } = req.params; // Lấy ID bình luận từ params
+
+        // Tìm bình luận theo ID bình luận
+        const comment = await model.BinhLuan.findOne({
+            where: {
+                IDBinhLuan: id
+            },
+            include: [
+                {
+                    model: model.NguoiDung,
+                    as: 'IDNguoiDung_NguoiDung', 
+                    attributes: ['IDNguoiDung', 'HoTen', 'Email'] // Trả về các thuộc tính từ NguoiDung
+                },
+                {
+                    model: model.KhoaHoc,
+                    as: 'IDKhoaHoc_KhoaHoc', 
+                    attributes: ['TenKhoaHoc'] // Trả về thuộc tính TenKhoaHoc từ KhoaHoc
+                }
+            ]
+        });
+
+        // Kiểm tra nếu không tìm thấy bình luận
+        if (!comment) {
+            return responseData(res, 404, "Không tìm thấy bình luận với ID này", null);
+        }
+
+        // Trả về bình luận với thông tin người dùng và tên khóa học
+        return responseData(res, 200, "Lấy bình luận thành công", comment);
+    } catch (error) {
+        return responseData(res, 500, "Lỗi khi lấy bình luận", error);
+    }
+};
+
+
 // Hàm gửi email thông báo đến giảng viên hoặc học viên khi có bình luận hoặc phản hồi
 export const sendNotificationToCommenters = async (commenterId, replyToId, commentType) => {
     try {
@@ -155,6 +192,40 @@ export const postReplyToComment = async (req, res) => {
         return responseData(res, 201, "Gửi phản hồi thành công", newReply);
     } catch (error) {
         return responseData(res, 500, "Lỗi khi gửi phản hồi", error);
+    }
+};
+
+// Xóa bình luận theo ID bình luận
+export const deleteCommentById = async (req, res) => {
+    try {
+        const { id } = req.params; // Lấy ID bình luận từ params
+
+        // Kiểm tra nếu ID không hợp lệ
+        if (!id) {
+            return responseData(res, 400, "ID bình luận không hợp lệ", null);
+        }
+
+        // Tìm bình luận theo ID
+        const comment = await model.BinhLuan.findOne({
+            where: {
+                IDBinhLuan: id
+            }
+        });
+
+        // Kiểm tra nếu không tìm thấy bình luận
+        if (!comment) {
+            return responseData(res, 404, "Không tìm thấy bình luận với ID này", null);
+        }
+
+        // Xóa bình luận
+        await comment.destroy();
+
+        // Trả về phản hồi thành công
+        return responseData(res, 200, "Xóa bình luận thành công", null);
+    } catch (error) {
+        console.error("Lỗi khi xóa bình luận:", error); // Ghi log lỗi để xem chi tiết
+
+        return responseData(res, 500, "Lỗi khi xóa bình luận", error.message || error);
     }
 };
 
