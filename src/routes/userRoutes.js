@@ -10,7 +10,7 @@ userRouter.put('/user/profile', isAuthenticated, updateUserProfile);
 userRouter.get('/giangvien',isAuthenticated, getKhoaHocByGiangVien);
 
 // Route để lấy danh sách người dùng có role là hocvien
-userRouter.get('/hocvien',isAuthenticated,isAdmin, getNguoiDungHocVien);
+userRouter.get('/hocvien',isAuthenticated, getNguoiDungHocVien);
 // Route để thêm người dùng mới có role là hocvien
 userRouter.post('/hocvien/add',isAuthenticated,isAdmin, themNguoiDungHocVien);
 // Route để chỉnh sửa thông tin người dùng có role là hocvien theo IDNguoiDung
