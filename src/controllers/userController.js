@@ -323,3 +323,17 @@ export const getChiTietNguoiDungGiangVien = async (req, res) => {
     }
   };
   
+
+// lấy danh sách tất cả người dùng có role là giangvien
+export const getNguoiDungAdmin = async (req, res) => {
+  try {
+    const adminList = await model.NguoiDung.findAll({
+        where: { Role: 'admin' }
+    });
+
+    return responseData(res, 200, "Danh sách giảng viên", adminList);
+} catch (error) {
+    console.error("Error fetching hoc vien list:", error);
+    return responseData(res, 500, "Có lỗi xảy ra: " + error.message);
+}
+};

@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAdmin, isAuthenticated } from '../middleware/auth.js';
-import { capNhatRoleHocVien, getChiTietNguoiDungGiangVien, getChiTietNguoiDungHocVien, getKhoaHocByGiangVien, getNguoiDungGiangVien, getNguoiDungHocVien, suaNguoiDungGiangVien, suaNguoiDungHocVien, themNguoiDungGiangVien, themNguoiDungHocVien,  updateUserProfile, xoaNguoiDungGiangVien, xoaNguoiDungHocVien } from '../controllers/userController.js';
+import { capNhatRoleHocVien, getChiTietNguoiDungGiangVien, getChiTietNguoiDungHocVien, getKhoaHocByGiangVien, getNguoiDungAdmin, getNguoiDungGiangVien, getNguoiDungHocVien, suaNguoiDungGiangVien, suaNguoiDungHocVien, themNguoiDungGiangVien, themNguoiDungHocVien,  updateUserProfile, xoaNguoiDungGiangVien, xoaNguoiDungHocVien } from '../controllers/userController.js';
 
 const userRouter = express.Router();
 
@@ -36,5 +36,8 @@ userRouter.put('/giangvien/put/:idNguoiDung',isAuthenticated,isAdmin, suaNguoiDu
 userRouter.delete('/giangvien/delete/:idNguoiDung',isAuthenticated,isAdmin, xoaNguoiDungGiangVien);
 // Xem chi tiết giảng viên theo ID
 userRouter.get('/giangvien/:idNguoiDung',isAuthenticated,isAdmin, getChiTietNguoiDungGiangVien);
+
+// Route để lấy danh sách người dùng có role là admin
+userRouter.get('/admin',isAuthenticated, getNguoiDungAdmin);
 
 export default userRouter;
