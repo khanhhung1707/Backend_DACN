@@ -271,3 +271,56 @@ app.post('/payment', async (req, res) => {
 // END MOMO
 
 app.listen(8080)
+
+
+//chat 
+import { createServer } from "http";
+import { Server } from "socket.io";
+import initModels from "./models/init-models.js";
+import sequelize from './models/connect.js';
+
+// Khởi tạo models
+const model = initModels(sequelize);
+
+const httpServer = createServer(app);
+
+// đối tượng socket server
+const io = new Server(httpServer, {
+  cors: {
+      origin: "*"
+  }
+});
+
+io.on("connection", (socket) => {
+  socket.on("join-room", async (roomId) => {
+      socket.join(roomId);
+
+      // Lấy dữ liệu chat từ cơ sở dữ liệu
+      let data = await model.Chat.findAll({
+          where: {
+              room_id: roomId
+          }
+      });
+
+      // Gửi dữ liệu chat đến tất cả người dùng trong phòng
+      io.to(roomId).emit("data-chat", data);
+  });
+
+  // message, userId, roomId
+  socket.on("send-mess", async (data) => {
+      let newChat = {
+          IDNguoiDung: data.userId,
+          content: data.message,
+          room_id: data.roomId,
+          NgayGui: new Date()
+      };
+
+      // Tạo mới một bản ghi chat trong cơ sở dữ liệu
+      await model.Chat.create(newChat);
+
+      // Gửi thông điệp đến tất cả người dùng trong phòng
+      io.to(data.roomId).emit("sv-send-mess", data);
+  });
+});
+
+httpServer.listen(8081);

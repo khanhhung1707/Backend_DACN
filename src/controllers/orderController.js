@@ -10,20 +10,19 @@ const model = initModels(sequelize);
 // lấy đơn hàng của người dùng đó
 export const layDonHangNguoiDung = async (req, res) => {
     try {
-        const userId = req.user.id; // ID người dùng từ token đã xác thực
+        const userId = req.user.id; 
         
         // Truy vấn để lấy đơn hàng của người dùng, chỉ lấy những đơn hàng chưa thanh toán
         const donHang = await model.DonHang.findAll({
             where: { 
                 IDNguoiDung: userId, // Lọc theo IDNguoiDung
+                TrangThai: { [Op.ne]: 'da_thanh_toan' } // Lọc đơn hàng có TrangThai khác 'da_thanh_toan'
             },
             include: [
                 {
                     model: model.KhoaHoc,  // Liên kết với bảng KhoaHoc
-                    as: 'IDKhoaHoc_KhoaHoc', // Đừng quên chỉ định alias nếu có
-                    where: {
-                        TrangThai: { [Op.ne]: 'da_thanh_toan' } // Loại trừ các khóa học có TrangThai = 'da_thanh_toan'
-                    }
+                    as: 'IDKhoaHoc_KhoaHoc', // Alias
+                    // Không cần điều kiện về TrangThai trong bảng KhoaHoc nữa
                 },
                 {
                     model: model.ThanhToan, 
@@ -44,6 +43,7 @@ export const layDonHangNguoiDung = async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ', error });
     }
 };
+
  
 
 // Lấy tất cả các đơn hàng
