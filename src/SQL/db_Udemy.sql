@@ -19,7 +19,7 @@ CREATE TABLE `BinhLuan` (
   KEY `IDNguoiDung` (`IDNguoiDung`),
   CONSTRAINT `BinhLuan_ibfk_1` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `BinhLuan_ibfk_2` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `BlackList`;
 CREATE TABLE `BlackList` (
@@ -41,6 +41,18 @@ CREATE TABLE `BlackList` (
   KEY `IDKhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `BlackList_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+DROP TABLE IF EXISTS `Chat`;
+CREATE TABLE `Chat` (
+  `IDChat` int NOT NULL AUTO_INCREMENT,
+  `IDNguoiDung` int NOT NULL,
+  `Content` text NOT NULL,
+  `RoomId` varchar(255) NOT NULL,
+  `NgayGui` datetime NOT NULL,
+  PRIMARY KEY (`IDChat`),
+  KEY `IDNguoiDung` (`IDNguoiDung`),
+  CONSTRAINT `Chat_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `DangKyKhoaHoc`;
 CREATE TABLE `DangKyKhoaHoc` (
@@ -343,10 +355,17 @@ INSERT INTO `BinhLuan` (`IDBinhLuan`, `IDKhoaHoc`, `IDNguoiDung`, `NoiDung`, `Th
 (14, 23, 2, 'Nội dung bình luận của tôi!', '2024-11-06 11:26:33');
 
 INSERT INTO `BlackList` (`IDBlackList`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `IDKhoaHoc`, `LyDo`, `NgayThemVaoBlackList`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `GiamGia`) VALUES
-(10, 4, 1, 2, 'Lập trình JavaScript 7', 'Khóa học về JavaScript cơ bản và nâng cao', 28, 'không phù hợp', '2024-11-14 10:01:34', 'https://example.com/image.jpg', 'tra_phi', 500000, NULL);
-INSERT INTO `BlackList` (`IDBlackList`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `IDKhoaHoc`, `LyDo`, `NgayThemVaoBlackList`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `GiamGia`) VALUES
 (11, 4, 1, 2, 'Lập trình JavaScript 8', 'Khóa học về JavaScript cơ bản và nâng cao', 29, 'không phù hợp', '2024-11-14 10:01:38', 'https://example.com/image.jpg', 'tra_phi', 500000, NULL);
 
+
+INSERT INTO `Chat` (`IDChat`, `IDNguoiDung`, `Content`, `RoomId`, `NgayGui`) VALUES
+(1, 2, '123', '1-2', '2024-11-22 00:00:00');
+INSERT INTO `Chat` (`IDChat`, `IDNguoiDung`, `Content`, `RoomId`, `NgayGui`) VALUES
+(2, 10, '123', '1-10', '2024-11-22 00:00:00');
+INSERT INTO `Chat` (`IDChat`, `IDNguoiDung`, `Content`, `RoomId`, `NgayGui`) VALUES
+(3, 1, '123', '1-2', '2024-11-22 00:00:00');
+INSERT INTO `Chat` (`IDChat`, `IDNguoiDung`, `Content`, `RoomId`, `NgayGui`) VALUES
+(4, 1, 'abc', '1-10', '2024-11-22 00:00:00');
 
 INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
 (1, 21, 2, '2024-10-08 13:13:22');
@@ -430,6 +449,7 @@ INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDa
 INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `NgayGuiKiemDuyet`, `TrangThai`) VALUES
 (10, 4, 1, 2, 'Lập trình JavaScript 6', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-14', 'chua_duyet');
 INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `NgayGuiKiemDuyet`, `TrangThai`) VALUES
+(28, 4, 1, 2, 'Lập trình JavaScript 7', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-14', 'chua_duyet'),
 (30, 4, 1, 2, 'Lập trình JavaScript 9', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-14', 'chua_duyet'),
 (31, 4, 1, 2, 'Lập trình JavaScript 10', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-14', 'chua_duyet'),
 (32, 4, 1, 2, 'Lập trình JavaScript 10', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', 'tra_phi', 500000, '2024-11-14', 'chua_duyet');
@@ -468,10 +488,12 @@ INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTe
 (3, 'khanhhungTest1', '$2b$10$lhSoQ.NW8ZowqY152epxAeWEatTgraIrUsWWtczGGYUOOLLF2rH7u', 'pjlatao999@gmail.com', 'Khánh Hưng Test 1', 'nam', '0942212265', 'giangvien', 'url.png');
 INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `GioiTinh`, `SDT`, `Role`, `AnhDaiDien`) VALUES
 (4, 'khanhhungTeacher', '$2b$10$igxGPRnAEVdWiX4igyaEx.UQFFKtz1jnJzOKRv1HowPbmhEVhGSTq', 'khanhhung.dacs@gmail.com', 'Khánh Hưng Teacher', 'nam', '0942212265', 'giangvien', 'url.png'),
-(10, 'test', '$2b$10$tM3ZKkSvRA4SqIzhC2F.lefi00VhuuisdYeWVoS6d.Xp5jDOfOo/e', 'test@gmail.com', 'test', 'nam', '09422212222', 'hocvien', NULL);
+(10, 'test', '$2b$10$tM3ZKkSvRA4SqIzhC2F.lefi00VhuuisdYeWVoS6d.Xp5jDOfOo/e', 'test@gmail.com', 'test', 'nam', '09422212222', 'giangvien', NULL);
 
 INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES
 (2, 'khanhhungUser', '$2b$10$W3/7wSzkyltMzfQaCExZaO7P9ZGS83xvSMkUxT8NRbpYVG63M5ToW', 'khanhhunguserdacn@gmail.com', 'Khánh Hưng User cập nhật 2', '0942212265', 'ban', 'nam');
+INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES
+(3, 'khanhhungTest1', '$2b$10$lhSoQ.NW8ZowqY152epxAeWEatTgraIrUsWWtczGGYUOOLLF2rH7u', 'pjlatao999@gmail.com', 'Khánh Hưng Test 1', '0942212265', 'ban', 'nam');
 INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES
 (7, 'user123', '$2b$10$UZ402FowISrrNVQ/4OaChOQ29pjujoGXiEGcGZeSz2EJlcfHVlmvq', 'user@example.com', 'Nguyen Van A', '0123456789', 'ban', 'nam');
 INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES

@@ -23,7 +23,7 @@ export default class Chat extends Model {
       allowNull: false
     },
     RoomId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     NgayGui: {

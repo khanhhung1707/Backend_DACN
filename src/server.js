@@ -287,7 +287,7 @@ const httpServer = createServer(app);
 // đối tượng socket server
 const io = new Server(httpServer, {
   cors: {
-      origin: "*"
+    origin: "*"
   }
 });
 
@@ -298,7 +298,7 @@ io.on("connection", (socket) => {
       // Lấy dữ liệu chat từ cơ sở dữ liệu
       let data = await model.Chat.findAll({
           where: {
-              room_id: roomId
+              RoomId: roomId 
           }
       });
 
@@ -307,19 +307,33 @@ io.on("connection", (socket) => {
   });
 
   // message, userId, roomId
-  socket.on("send-mess", async (data) => {
-      let newChat = {
-          IDNguoiDung: data.userId,
-          content: data.message,
-          room_id: data.roomId,
-          NgayGui: new Date()
-      };
-
-      // Tạo mới một bản ghi chat trong cơ sở dữ liệu
-      await model.Chat.create(newChat);
-
-      // Gửi thông điệp đến tất cả người dùng trong phòng
-      io.to(data.roomId).emit("sv-send-mess", data);
+  socket.on("send-message", async (data) => {
+    const { IDNguoiDung, Content, RoomId, NgayGui } = data;
+  
+    // Kiểm tra dữ liệu trước khi gửi lại cho các client khác
+    if (!IDNguoiDung || !Content || !RoomId || !NgayGui) {
+      console.error("Missing fields in message data:", data);
+      return; // Ngừng xử lý nếu thiếu dữ liệu
+    }
+  
+    try {
+      // Lưu tin nhắn vào cơ sở dữ liệu
+      await model.Chat.create({
+        IDNguoiDung,    
+        Content,        
+        RoomId,         
+        NgayGui,        
+      });
+  
+      // Gửi tin nhắn đến các client khác trong room
+      socket.to(RoomId).emit("sv-send-mess", {
+        message: Content,
+        userId: IDNguoiDung,
+        roomId: RoomId,
+      });
+    } catch (error) {
+      console.error("Error saving message to database:", error);
+    }
   });
 });
 
