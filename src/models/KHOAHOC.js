@@ -80,6 +80,10 @@ export default class KhoaHoc extends Model {
         model: 'Hashtag',
         key: 'IDHashTag'
       }
+    },
+    LinkVideo: {
+      type: DataTypes.TEXT,
+      allowNull: true
     }
   }, {
     sequelize,

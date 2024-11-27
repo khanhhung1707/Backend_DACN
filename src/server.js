@@ -93,6 +93,7 @@ app.use(cors())
 app.use(express.json());
 
 app.use(authRouter)
+app.use(vnpayRoutes)
 app.use(courseRouter)
 app.use(commentRouter)
 app.use(nhanXetRouter)
@@ -278,6 +279,8 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import initModels from "./models/init-models.js";
 import sequelize from './models/connect.js';
+import vnpayRouter from './routes/vnpayRoutes.js';
+import vnpayRoutes from './routes/vnpayRoutes.js';
 
 // Khởi tạo models
 const model = initModels(sequelize);
