@@ -112,162 +112,162 @@ app.use(videoRoutes)
 app.use(hashTagRoutes)
 
 // MOMO
-app.post('/payment', async (req, res) => {
-    let {
-      accessKey,
-      secretKey,
-      orderInfo,
-      partnerCode,
-      redirectUrl,
-      ipnUrl,
-      requestType,
-      extraData,
-      orderGroupId,
-      autoCapture,
-      lang,
-    } = config;
+// app.post('/payment', async (req, res) => {
+//     let {
+//       accessKey,
+//       secretKey,
+//       orderInfo,
+//       partnerCode,
+//       redirectUrl,
+//       ipnUrl,
+//       requestType,
+//       extraData,
+//       orderGroupId,
+//       autoCapture,
+//       lang,
+//     } = config;
   
-    var amount = '10000';
-    var orderId = partnerCode + new Date().getTime();
-    var requestId = orderId;
+//     var amount = '10000';
+//     var orderId = partnerCode + new Date().getTime();
+//     var requestId = orderId;
   
-    //before sign HMAC SHA256 with format
-    //accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType
-    var rawSignature =
-      'accessKey=' +
-      accessKey +
-      '&amount=' +
-      amount +
-      '&extraData=' +
-      extraData +
-      '&ipnUrl=' +
-      ipnUrl +
-      '&orderId=' +
-      orderId +
-      '&orderInfo=' +
-      orderInfo +
-      '&partnerCode=' +
-      partnerCode +
-      '&redirectUrl=' +
-      redirectUrl +
-      '&requestId=' +
-      requestId +
-      '&requestType=' +
-      requestType;
+//     //before sign HMAC SHA256 with format
+//     //accessKey=$accessKey&amount=$amount&extraData=$extraData&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&redirectUrl=$redirectUrl&requestId=$requestId&requestType=$requestType
+//     var rawSignature =
+//       'accessKey=' +
+//       accessKey +
+//       '&amount=' +
+//       amount +
+//       '&extraData=' +
+//       extraData +
+//       '&ipnUrl=' +
+//       ipnUrl +
+//       '&orderId=' +
+//       orderId +
+//       '&orderInfo=' +
+//       orderInfo +
+//       '&partnerCode=' +
+//       partnerCode +
+//       '&redirectUrl=' +
+//       redirectUrl +
+//       '&requestId=' +
+//       requestId +
+//       '&requestType=' +
+//       requestType;
   
-    //signature
-    var signature = crypto
-      .createHmac('sha256', secretKey)
-      .update(rawSignature)
-      .digest('hex');
+//     //signature
+//     var signature = crypto
+//       .createHmac('sha256', secretKey)
+//       .update(rawSignature)
+//       .digest('hex');
   
-    //json object send to MoMo endpoint
-    const requestBody = JSON.stringify({
-      partnerCode: partnerCode,
-      partnerName: 'Test',
-      storeId: 'MomoTestStore',
-      requestId: requestId,
-      amount: amount,
-      orderId: orderId,
-      orderInfo: orderInfo,
-      redirectUrl: redirectUrl,
-      ipnUrl: ipnUrl,
-      lang: lang,
-      requestType: requestType,
-      autoCapture: autoCapture,
-      extraData: extraData,
-      orderGroupId: orderGroupId,
-      signature: signature,
-    });
+//     //json object send to MoMo endpoint
+//     const requestBody = JSON.stringify({
+//       partnerCode: partnerCode,
+//       partnerName: 'Test',
+//       storeId: 'MomoTestStore',
+//       requestId: requestId,
+//       amount: amount,
+//       orderId: orderId,
+//       orderInfo: orderInfo,
+//       redirectUrl: redirectUrl,
+//       ipnUrl: ipnUrl,
+//       lang: lang,
+//       requestType: requestType,
+//       autoCapture: autoCapture,
+//       extraData: extraData,
+//       orderGroupId: orderGroupId,
+//       signature: signature,
+//     });
   
-    // options for axios
-    const options = {
-      method: 'POST',
-      url: 'https://test-payment.momo.vn/v2/gateway/api/create',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(requestBody),
-      },
-      data: requestBody,
-    };
+//     // options for axios
+//     const options = {
+//       method: 'POST',
+//       url: 'https://test-payment.momo.vn/v2/gateway/api/create',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Content-Length': Buffer.byteLength(requestBody),
+//       },
+//       data: requestBody,
+//     };
   
-    // Send the request and handle the response
-    let result;
-    try {
-      result = await axios(options);
-      return res.status(200).json(result.data);
-    } catch (error) {
-      return res.status(500).json({ statusCode: 500, message: error.message });
-    }
-  });
+//     // Send the request and handle the response
+//     let result;
+//     try {
+//       result = await axios(options);
+//       return res.status(200).json(result.data);
+//     } catch (error) {
+//       return res.status(500).json({ statusCode: 500, message: error.message });
+//     }
+//   });
   
-  app.post('/callback', async (req, res) => {
-    /**
-      resultCode = 0: giao dịch thành công.
-      resultCode = 9000: giao dịch được cấp quyền (authorization) thành công .
-      resultCode <> 0: giao dịch thất bại.
-     */
-    console.log('callback: ');
-    console.log(req.body);
-    /**
-     * Dựa vào kết quả này để update trạng thái đơn hàng
-     * Kết quả log:
-     * {
-          partnerCode: 'MOMO',
-          orderId: 'MOMO1712108682648',
-          requestId: 'MOMO1712108682648',
-          amount: 10000,
-          orderInfo: 'pay with MoMo',
-          orderType: 'momo_wallet',
-          transId: 4014083433,
-          resultCode: 0,
-          message: 'Thành công.',
-          payType: 'qr',
-          responseTime: 1712108811069,
-          extraData: '',
-          signature: '10398fbe70cd3052f443da99f7c4befbf49ab0d0c6cd7dc14efffd6e09a526c0'
-        }
-     */
+//   app.post('/callback', async (req, res) => {
+//     /**
+//       resultCode = 0: giao dịch thành công.
+//       resultCode = 9000: giao dịch được cấp quyền (authorization) thành công .
+//       resultCode <> 0: giao dịch thất bại.
+//      */
+//     console.log('callback: ');
+//     console.log(req.body);
+//     /**
+//      * Dựa vào kết quả này để update trạng thái đơn hàng
+//      * Kết quả log:
+//      * {
+//           partnerCode: 'MOMO',
+//           orderId: 'MOMO1712108682648',
+//           requestId: 'MOMO1712108682648',
+//           amount: 10000,
+//           orderInfo: 'pay with MoMo',
+//           orderType: 'momo_wallet',
+//           transId: 4014083433,
+//           resultCode: 0,
+//           message: 'Thành công.',
+//           payType: 'qr',
+//           responseTime: 1712108811069,
+//           extraData: '',
+//           signature: '10398fbe70cd3052f443da99f7c4befbf49ab0d0c6cd7dc14efffd6e09a526c0'
+//         }
+//      */
   
-    return res.status(204).json(req.body);
-  });
+//     return res.status(204).json(req.body);
+//   });
   
-  app.post('/check-status-transaction', async (req, res) => {
-    const { orderId } = req.body;
+//   app.post('/check-status-transaction', async (req, res) => {
+//     const { orderId } = req.body;
   
-    // const signature = accessKey=$accessKey&orderId=$orderId&partnerCode=$partnerCode
-    // &requestId=$requestId
-    var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
-    var accessKey = 'F8BBA842ECF85';
-    const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=MOMO&requestId=${orderId}`;
+//     // const signature = accessKey=$accessKey&orderId=$orderId&partnerCode=$partnerCode
+//     // &requestId=$requestId
+//     var secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+//     var accessKey = 'F8BBA842ECF85';
+//     const rawSignature = `accessKey=${accessKey}&orderId=${orderId}&partnerCode=MOMO&requestId=${orderId}`;
   
-    const signature = crypto
-      .createHmac('sha256', secretKey)
-      .update(rawSignature)
-      .digest('hex');
+//     const signature = crypto
+//       .createHmac('sha256', secretKey)
+//       .update(rawSignature)
+//       .digest('hex');
   
-    const requestBody = JSON.stringify({
-      partnerCode: 'MOMO',
-      requestId: orderId,
-      orderId: orderId,
-      signature: signature,
-      lang: 'vi',
-    });
+//     const requestBody = JSON.stringify({
+//       partnerCode: 'MOMO',
+//       requestId: orderId,
+//       orderId: orderId,
+//       signature: signature,
+//       lang: 'vi',
+//     });
   
-    // options for axios
-    const options = {
-      method: 'POST',
-      url: 'https://test-payment.momo.vn/v2/gateway/api/query',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: requestBody,
-    };
+//     // options for axios
+//     const options = {
+//       method: 'POST',
+//       url: 'https://test-payment.momo.vn/v2/gateway/api/query',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       data: requestBody,
+//     };
   
-    const result = await axios(options);
+//     const result = await axios(options);
   
-    return res.status(200).json(result.data);
-  });
+//     return res.status(200).json(result.data);
+//   });
 
 // END MOMO
 
@@ -295,49 +295,59 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("join-room", async (roomId) => {
-      socket.join(roomId);
+  // Xử lý join-room
+socket.on("join-room", async (roomId) => {
+  // Tách RoomId thành 2 ID
+  const [userId1, userId2] = roomId.split("-").map(Number);
 
-      // Lấy dữ liệu chat từ cơ sở dữ liệu
-      let data = await model.Chat.findAll({
-          where: {
-              RoomId: roomId 
-          }
-      });
+  // Đảm bảo ID nhỏ hơn trước
+  const normalizedRoomId = userId1 < userId2 ? `${userId1}-${userId2}` : `${userId2}-${userId1}`;
 
-      // Gửi dữ liệu chat đến tất cả người dùng trong phòng
-      io.to(roomId).emit("data-chat", data);
-  });
+  socket.join(normalizedRoomId);
 
-  // message, userId, roomId
-  socket.on("send-message", async (data) => {
-    const { IDNguoiDung, Content, RoomId, NgayGui } = data;
-  
-    // Kiểm tra dữ liệu trước khi gửi lại cho các client khác
-    if (!IDNguoiDung || !Content || !RoomId || !NgayGui) {
-      console.error("Missing fields in message data:", data);
-      return; // Ngừng xử lý nếu thiếu dữ liệu
-    }
-  
-    try {
-      // Lưu tin nhắn vào cơ sở dữ liệu
-      await model.Chat.create({
-        IDNguoiDung,    
-        Content,        
-        RoomId,         
-        NgayGui,        
-      });
-  
-      // Gửi tin nhắn đến các client khác trong room
-      socket.to(RoomId).emit("sv-send-mess", {
-        message: Content,
-        userId: IDNguoiDung,
-        roomId: RoomId,
-      });
-    } catch (error) {
-      console.error("Error saving message to database:", error);
+  // Lấy dữ liệu chat từ cơ sở dữ liệu
+  let data = await model.Chat.findAll({
+    where: {
+      RoomId: normalizedRoomId
     }
   });
+
+  // Gửi dữ liệu chat đến tất cả người dùng trong phòng
+  io.to(normalizedRoomId).emit("data-chat", data);
+});
+
+// Xử lý send-message
+socket.on("send-message", async (data) => {
+  const { IDNguoiDung, Content, RoomId, NgayGui } = data;
+
+  // Kiểm tra dữ liệu trước khi gửi lại cho các client khác
+  if (!IDNguoiDung || !Content || !RoomId || !NgayGui) {
+    return; 
+  }
+
+  try {
+    // Đảm bảo RoomId có thứ tự cố định
+    const [userId1, userId2] = RoomId.split("-").map(Number);
+    const normalizedRoomId = userId1 < userId2 ? `${userId1}-${userId2}` : `${userId2}-${userId1}`;
+
+    // Lưu tin nhắn vào cơ sở dữ liệu
+    await model.Chat.create({
+      IDNguoiDung,    
+      Content,        
+      RoomId: normalizedRoomId,         
+      NgayGui,        
+    });
+
+    // Gửi tin nhắn đến các client khác trong room
+    io.to(normalizedRoomId).emit("send-message", {
+      message: Content,
+      userId: IDNguoiDung,
+      roomId: normalizedRoomId,
+      NgayGui: new Date().toISOString()
+    });
+  } catch (error) {
+  }
+});
 });
 
 httpServer.listen(8081);
