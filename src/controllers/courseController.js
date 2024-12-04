@@ -274,10 +274,22 @@ export const searchCoursesByCategory = async (req, res) => {
 //Tạo khóa học (only giảng viên)
 export const createCourse = async (req, res) => {
     try {
-        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien, IDKhuyenMai, LuotXem, SoLuongHocVien, GiamGia } = req.body;
+        const { 
+            TenKhoaHoc, 
+            MoTaKhoaHoc, 
+            HinhAnh, 
+            LoaiKhoaHoc, 
+            IDDanhMuc, 
+            GiaTien, 
+            IDKhuyenMai, 
+            LuotXem, 
+            SoLuongHocVien, 
+            GiamGia, 
+            LinkVideo 
+        } = req.body;
 
         // Kiểm tra dữ liệu đầu vào
-        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien || !IDKhuyenMai || !LuotXem || !SoLuongHocVien || !GiamGia) {
+        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien || !IDKhuyenMai || !LuotXem || !SoLuongHocVien || !GiamGia || !LinkVideo) {
             return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
         }
 
@@ -293,6 +305,7 @@ export const createCourse = async (req, res) => {
             LuotXem,
             SoLuongHocVien, 
             GiamGia,
+            LinkVideo,
             TrangThai: 'chua_duyet', 
             NgayGuiKiemDuyet: new Date(),  
             IDNguoiDung: req.user.id 
@@ -303,6 +316,7 @@ export const createCourse = async (req, res) => {
         return responseData(res, 500, "Lỗi khi tạo khóa học", error);
     }
 };
+
 
 // Chỉnh sửa khóa học của giảng viên đó tạo
 export const updateCourse = async (req, res) => {
