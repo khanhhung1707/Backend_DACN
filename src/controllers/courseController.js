@@ -322,14 +322,26 @@ export const createCourse = async (req, res) => {
 export const updateCourse = async (req, res) => {
     try {
         const { id } = req.params; 
-        const { TenKhoaHoc, MoTaKhoaHoc, HinhAnh, LoaiKhoaHoc, IDDanhMuc, GiaTien, IDKhuyenMai, LuotXem, SoLuongHocVien, GiamGia } = req.body;
+        const { 
+            TenKhoaHoc, 
+            MoTaKhoaHoc, 
+            HinhAnh, 
+            LoaiKhoaHoc, 
+            IDDanhMuc, 
+            GiaTien, 
+            IDKhuyenMai, 
+            LuotXem, 
+            SoLuongHocVien, 
+            GiamGia, 
+            LinkVideo 
+        } = req.body;
+
         const userId = req.user.id; 
 
         // Kiểm tra dữ liệu đầu vào
-        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien || !IDKhuyenMai || !LuotXem || !SoLuongHocVien || !GiamGia) {
+        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien || !IDKhuyenMai || !LuotXem || !SoLuongHocVien || !GiamGia || !LinkVideo) {
             return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
         }
-
 
         // Tìm khóa học cần cập nhật
         const course = await model.KhoaHoc.findByPk(id);
@@ -355,6 +367,7 @@ export const updateCourse = async (req, res) => {
             LuotXem,
             SoLuongHocVien, 
             GiamGia,
+            LinkVideo, 
             NgayCapNhat: new Date()  
         });
 
@@ -363,6 +376,7 @@ export const updateCourse = async (req, res) => {
         return responseData(res, 500, "Lỗi khi cập nhật khóa học", error);
     }
 };
+
 
 // xóa khóa học
 export const deleteCourse = async (req, res) => {
