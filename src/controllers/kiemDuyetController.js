@@ -9,7 +9,7 @@ const model = initModels(sequelize);
 export const layDanhSachKhoaHocKiemDuyet = async (req, res) => {
     try {
         // Lấy danh sách tất cả khóa học
-        const danhSachKhoaHoc = await model.KhoaHoc.findAll({
+        const danhSachKhoaHoc = await model.KhoaHocChuaDuyet.findAll({
             include: [
                 {
                     model: model.NguoiDung,
