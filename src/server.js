@@ -279,7 +279,6 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import initModels from "./models/init-models.js";
 import sequelize from './models/connect.js';
-import vnpayRouter from './routes/vnpayRoutes.js';
 import vnpayRoutes from './routes/vnpayRoutes.js';
 
 // Khởi tạo models
@@ -295,59 +294,66 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", (socket) => {
+  console.log("Client connected:", socket.id);
+
   // Xử lý join-room
-socket.on("join-room", async (roomId) => {
-  // Tách RoomId thành 2 ID
-  const [userId1, userId2] = roomId.split("-").map(Number);
+  socket.on("join-room", async (roomId) => {
+    const [userId1, userId2] = roomId.split("-").map(Number);
 
-  // Đảm bảo ID nhỏ hơn trước
-  const normalizedRoomId = userId1 < userId2 ? `${userId1}-${userId2}` : `${userId2}-${userId1}`;
+    // Đảm bảo ID nhỏ hơn trước
+    const normalizedRoomId = userId1 < userId2 ? `${userId1}-${userId2}` : `${userId2}-${userId1}`;
+    socket.join(normalizedRoomId);
 
-  socket.join(normalizedRoomId);
+    console.log(`User joined room: ${normalizedRoomId}`);
 
-  // Lấy dữ liệu chat từ cơ sở dữ liệu
-  let data = await model.Chat.findAll({
-    where: {
-      RoomId: normalizedRoomId
+    // Lấy dữ liệu chat từ cơ sở dữ liệu
+    try {
+      let data = await model.Chat.findAll({
+        where: {
+          RoomId: normalizedRoomId
+        }
+      });
+
+      // Gửi dữ liệu chat đến tất cả người dùng trong phòng
+      io.to(normalizedRoomId).emit("data-chat", data);
+    } catch (error) {
+      console.error("Error fetching chat data:", error);
     }
   });
 
-  // Gửi dữ liệu chat đến tất cả người dùng trong phòng
-  io.to(normalizedRoomId).emit("data-chat", data);
-});
+  // Xử lý send-message
+  socket.on("send-message", async (data) => {
+    const { IDNguoiDung, Content, RoomId, NgayGui } = data;
 
-// Xử lý send-message
-socket.on("send-message", async (data) => {
-  const { IDNguoiDung, Content, RoomId, NgayGui } = data;
+    if (!IDNguoiDung || !Content || !RoomId || !NgayGui) {
+      console.error("Invalid message data:", data);
+      return;
+    }
 
-  // Kiểm tra dữ liệu trước khi gửi lại cho các client khác
-  if (!IDNguoiDung || !Content || !RoomId || !NgayGui) {
-    return; 
-  }
+    try {
+      const [userId1, userId2] = RoomId.split("-").map(Number);
+      const normalizedRoomId = userId1 < userId2 ? `${userId1}-${userId2}` : `${userId2}-${userId1}`;
 
-  try {
-    // Đảm bảo RoomId có thứ tự cố định
-    const [userId1, userId2] = RoomId.split("-").map(Number);
-    const normalizedRoomId = userId1 < userId2 ? `${userId1}-${userId2}` : `${userId2}-${userId1}`;
+      // Lưu tin nhắn vào cơ sở dữ liệu
+      await model.Chat.create({
+        IDNguoiDung,
+        Content,
+        RoomId: normalizedRoomId,
+        NgayGui,
+      });
 
-    // Lưu tin nhắn vào cơ sở dữ liệu
-    await model.Chat.create({
-      IDNguoiDung,    
-      Content,        
-      RoomId: normalizedRoomId,         
-      NgayGui,        
-    });
-
-    // Gửi tin nhắn đến các client khác trong room
-    io.to(normalizedRoomId).emit("send-message", {
-      message: Content,
-      userId: IDNguoiDung,
-      roomId: normalizedRoomId,
-      NgayGui: new Date().toISOString()
-    });
-  } catch (error) {
-  }
-});
+      // Gửi tin nhắn đến tất cả các client khác trong room
+      io.to(normalizedRoomId).emit("sv-send-mess", {
+        content: Content,
+        IDNguoiDung,
+        RoomId: normalizedRoomId,
+        NgayGui,
+      });
+      console.log(`Message sent to room ${normalizedRoomId}`);
+    } catch (error) {
+      console.error("Error handling send-message:", error);
+    }
+  });
 });
 
 httpServer.listen(8081);
