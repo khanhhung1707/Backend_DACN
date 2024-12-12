@@ -52,7 +52,7 @@ CREATE TABLE `Chat` (
   PRIMARY KEY (`IDChat`),
   KEY `IDNguoiDung` (`IDNguoiDung`),
   CONSTRAINT `Chat_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `DangKyKhoaHoc`;
 CREATE TABLE `DangKyKhoaHoc` (
@@ -90,7 +90,7 @@ CREATE TABLE `DonHang` (
   CONSTRAINT `DonHang_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`),
   CONSTRAINT `FK_DonHang_KhoaHoc` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `FK_DonHang_ThanhToan` FOREIGN KEY (`IDThanhToan`) REFERENCES `ThanhToan` (`IDThanhToan`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `FollowAuthor`;
 CREATE TABLE `FollowAuthor` (
@@ -225,7 +225,7 @@ CREATE TABLE `NguoiDung` (
   `Role` enum('hocvien','giangvien','admin') NOT NULL,
   `AnhDaiDien` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `NguoiDungChan`;
 CREATE TABLE `NguoiDungChan` (
@@ -290,7 +290,7 @@ CREATE TABLE `ThanhToan` (
   KEY `FK_ThanhToan_NguoiDung` (`IDNguoiDung`),
   CONSTRAINT `FK_ThanhToan_DonHang` FOREIGN KEY (`IDDonHang`) REFERENCES `DonHang` (`IDDonHang`),
   CONSTRAINT `FK_ThanhToan_NguoiDung` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `ThanhToan_DonHang`;
 CREATE TABLE `ThanhToan_DonHang` (
@@ -367,7 +367,13 @@ INSERT INTO `Chat` (`IDChat`, `IDNguoiDung`, `Content`, `RoomId`, `NgayGui`) VAL
 (3, 1, '123', '1-2', '2024-11-22 00:00:00');
 INSERT INTO `Chat` (`IDChat`, `IDNguoiDung`, `Content`, `RoomId`, `NgayGui`) VALUES
 (4, 1, 'abc', '1-10', '2024-11-22 00:00:00'),
-(5, 1, 'khanh hung', '1-2', '2024-11-22 00:00:00');
+(5, 1, 'khanh hung', '1-2', '2024-11-22 00:00:00'),
+(6, 11, 'test', '11-3', '2024-11-29 00:00:00'),
+(40, 11, 'test', '4-11', '2024-12-12 00:00:00'),
+(41, 11, 'test 2', '4-11', '2024-12-12 00:00:00'),
+(48, 4, 'test 3', '4-11', '2024-12-12 00:00:00'),
+(49, 11, 'test 4', '4-11', '2024-12-12 00:00:00'),
+(50, 11, '123', '4-11', '2024-12-12 00:00:00');
 
 INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
 (1, 21, 2, '2024-10-08 13:13:22');
@@ -411,7 +417,12 @@ INSERT INTO `DonHang` (`IDDonHang`, `IDNguoiDung`, `NgayMua`, `TongTien`, `Trang
 (14, 2, '2024-11-22', '300000.00', 'da_thanh_toan', 13, 23),
 (15, 2, '2024-11-22', '150000.00', 'da_thanh_toan', 14, 21),
 (16, 2, '2024-11-22', '200000.00', 'da_thanh_toan', 14, 22),
-(17, 2, '2024-11-22', '300000.00', 'da_thanh_toan', 14, 23);
+(17, 2, '2024-11-22', '300000.00', 'da_thanh_toan', 14, 23),
+(18, 11, '2024-11-27', '200000.00', 'da_thanh_toan', 15, 22),
+(19, 11, '2024-11-27', '300000.00', 'da_thanh_toan', 15, 23),
+(20, 11, '2024-11-27', '200000.00', 'da_thanh_toan', 15, 22),
+(21, 11, '2024-11-27', '300000.00', 'da_thanh_toan', 15, 23),
+(22, 11, '2024-11-27', '200000.00', 'da_thanh_toan', 15, 25);
 
 INSERT INTO `FollowAuthor` (`IDFollowAuthor`, `IDNguoiDung`, `IDNguoiDungGiangVien`, `NgayFollow`) VALUES
 (1, 2, 4, '2024-10-14');
@@ -496,7 +507,8 @@ INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTe
 (3, 'khanhhungTest1', '$2b$10$lhSoQ.NW8ZowqY152epxAeWEatTgraIrUsWWtczGGYUOOLLF2rH7u', 'pjlatao999@gmail.com', 'Khánh Hưng Test 1', 'nam', '0942212265', 'giangvien', 'url.png');
 INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `GioiTinh`, `SDT`, `Role`, `AnhDaiDien`) VALUES
 (4, 'khanhhungTeacher', '$2b$10$igxGPRnAEVdWiX4igyaEx.UQFFKtz1jnJzOKRv1HowPbmhEVhGSTq', 'khanhhung.dacs@gmail.com', 'Khánh Hưng Teacher', 'nam', '0942212265', 'giangvien', 'url.png'),
-(10, 'test', '$2b$10$tM3ZKkSvRA4SqIzhC2F.lefi00VhuuisdYeWVoS6d.Xp5jDOfOo/e', 'test@gmail.com', 'test', 'nam', '09422212222', 'giangvien', NULL);
+(10, 'test', '$2b$10$tM3ZKkSvRA4SqIzhC2F.lefi00VhuuisdYeWVoS6d.Xp5jDOfOo/e', 'test@gmail.com', 'test', 'nam', '09422212222', 'giangvien', NULL),
+(11, 'Khánh Hưng Nguyễn', '$2b$10$Ji406IqC8mCOkzgbe3tNd.Ia3q4lMvHOtlxwkSpev/HkE2zVt5916', 'khanhhung1234321@gmail.com', 'Khánh Hưng Nguyễn', 'nam', '', 'hocvien', 'https://lh3.googleusercontent.com/a/ACg8ocIi6c8lcMuaNwr7pijjE3CgzpSrKQAOA2QMZOV_6GrU516G7lkI=s96-c');
 
 INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES
 (2, 'khanhhungUser', '$2b$10$W3/7wSzkyltMzfQaCExZaO7P9ZGS83xvSMkUxT8NRbpYVG63M5ToW', 'khanhhunguserdacn@gmail.com', 'Khánh Hưng User cập nhật 2', '0942212265', 'ban', 'nam');
@@ -552,7 +564,8 @@ INSERT INTO `ThanhToan` (`IDThanhToan`, `NgayThanhToan`, `PhuongThucThanhToan`, 
 (11, '2024-11-14', 'credit_card', 'Thanh toán đơn hàng', '1000000.00', NULL, 2, NULL, NULL, NULL, NULL),
 (12, '2024-11-14', 'credit_card', 'Thanh toán đơn hàng', '1000000.00', NULL, 2, NULL, NULL, NULL, NULL),
 (13, '2024-11-22', 'Cash', 'abc', '500000.00', NULL, 2, NULL, NULL, NULL, NULL),
-(14, '2024-11-22', 'Cash', 'abc', '650000.00', NULL, 2, NULL, NULL, NULL, NULL);
+(14, '2024-11-22', 'Cash', 'abc', '650000.00', NULL, 2, NULL, NULL, NULL, NULL),
+(15, '2024-11-27', 'VNPAY', 'Thanh toán giỏ hàng', '1200000.00', NULL, 11, NULL, NULL, NULL, NULL);
 
 INSERT INTO `ThanhToan_DonHang` (`IDThanhToan`, `IDDonHang`) VALUES
 (11, 11);
@@ -566,7 +579,12 @@ INSERT INTO `ThanhToan_DonHang` (`IDThanhToan`, `IDDonHang`) VALUES
 (13, 14),
 (14, 15),
 (14, 16),
-(14, 17);
+(14, 17),
+(15, 18),
+(15, 19),
+(15, 20),
+(15, 21),
+(15, 22);
 
 
 
