@@ -52,7 +52,7 @@ CREATE TABLE `Chat` (
   PRIMARY KEY (`IDChat`),
   KEY `IDNguoiDung` (`IDNguoiDung`),
   CONSTRAINT `Chat_ibfk_1` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `DangKyKhoaHoc`;
 CREATE TABLE `DangKyKhoaHoc` (
@@ -60,12 +60,13 @@ CREATE TABLE `DangKyKhoaHoc` (
   `IDKhoaHoc` int DEFAULT NULL,
   `IDNguoiDung` int DEFAULT NULL,
   `ngayDangKy` datetime DEFAULT CURRENT_TIMESTAMP,
+  `RoomId` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`IDDangKyKhoaHoc`),
   KEY `IDKhoaHoc` (`IDKhoaHoc`),
   KEY `IDNguoiDung` (`IDNguoiDung`),
   CONSTRAINT `DangKyKhoaHoc_ibfk_1` FOREIGN KEY (`IDKhoaHoc`) REFERENCES `KhoaHoc` (`IDKhoaHoc`),
   CONSTRAINT `DangKyKhoaHoc_ibfk_2` FOREIGN KEY (`IDNguoiDung`) REFERENCES `NguoiDung` (`IDNguoiDung`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 DROP TABLE IF EXISTS `DanhMucKhoaHoc`;
 CREATE TABLE `DanhMucKhoaHoc` (
@@ -158,6 +159,7 @@ CREATE TABLE `KhoaHoc` (
   `GiaTien` int DEFAULT NULL,
   `IDHashTag` int DEFAULT NULL,
   `LinkVideo` longtext,
+  `RoomId` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`IDKhoaHoc`),
   KEY `IDNguoiDung` (`IDNguoiDung`),
   KEY `IDDanhMuc` (`IDDanhMuc`),
@@ -373,22 +375,75 @@ INSERT INTO `Chat` (`IDChat`, `IDNguoiDung`, `Content`, `RoomId`, `NgayGui`) VAL
 (41, 11, 'test 2', '4-11', '2024-12-12 00:00:00'),
 (48, 4, 'test 3', '4-11', '2024-12-12 00:00:00'),
 (49, 11, 'test 4', '4-11', '2024-12-12 00:00:00'),
-(50, 11, '123', '4-11', '2024-12-12 00:00:00');
+(50, 11, '123', '4-11', '2024-12-12 00:00:00'),
+(51, 4, 'test', '4-11', '2024-12-17 00:00:00'),
+(52, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(53, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(54, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(55, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(56, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(57, 4, 'axxx', '4-11', '2024-12-17 00:00:00'),
+(58, 4, 'qqqq', '4-11', '2024-12-17 00:00:00'),
+(59, 4, 't', '4-11', '2024-12-17 00:00:00'),
+(60, 4, 'iiii', '4-11', '2024-12-17 00:00:00'),
+(61, 4, 'ttt', '4-11', '2024-12-17 00:00:00'),
+(62, 4, '1', '4-11', '2024-12-17 00:00:00'),
+(63, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(64, 11, '1', '4-11', '2024-12-17 00:00:00'),
+(65, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(66, 4, 'g', '4-11', '2024-12-17 00:00:00'),
+(67, 4, 'uy', '4-11', '2024-12-17 00:00:00'),
+(68, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(69, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(70, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(71, 11, 'uuuu', '4-11', '2024-12-17 00:00:00'),
+(72, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(73, 11, '1', '4-11', '2024-12-17 00:00:00'),
+(74, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(75, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(76, 4, 'a', '4-11', '2024-12-17 00:00:00'),
+(77, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(78, 11, '11', '4-11', '2024-12-17 00:00:00'),
+(79, 11, '123', '4-11', '2024-12-17 00:00:00'),
+(80, 4, 'abc', '4-11', '2024-12-17 00:00:00'),
+(81, 11, '123', '4-11', '2024-12-17 00:00:00'),
+(82, 11, 'xyz', '4-11', '2024-12-17 00:00:00'),
+(83, 11, '123123', '4-11', '2024-12-17 00:00:00'),
+(84, 11, 'a', '4-11', '2024-12-17 00:00:00'),
+(85, 4, 'b', '4-11', '2024-12-17 00:00:00'),
+(86, 2, 'test chat nhom', 'undefined-1', '2025-04-05 02:04:01'),
+(87, 2, '123', '1-2', '2025-04-05 02:05:05'),
+(88, 2, 'test chat nhóm', 'undefined-1', '2025-04-05 02:07:01'),
+(89, 2, 'test ', 'undefined-1', '2025-04-05 02:35:52'),
+(90, 2, '1', 'undefined-1', '2025-04-05 02:37:59'),
+(91, 2, '123', '1', '2025-04-05 02:53:17'),
+(92, 2, 'abc', '1', '2025-04-05 02:55:16'),
+(93, 3, 'abc', '5', '2025-04-05 03:02:04'),
+(94, 1, '123', '5', '2025-04-05 03:02:07'),
+(95, 2, 'xyz', '5', '2025-04-05 03:02:11'),
+(96, 1, '1234', '5', '2025-04-05 03:03:03'),
+(97, 3, 'abcd', '5', '2025-04-05 03:03:13'),
+(98, 2, 'xyzq', '5', '2025-04-05 03:03:25'),
+(99, 1, '1', '5', '2025-04-05 05:22:41'),
+(100, 2, '2', '5', '2025-04-05 05:22:44'),
+(101, 3, '3', '5', '2025-04-05 05:22:48');
 
-INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
-(1, 21, 2, '2024-10-08 13:13:22');
-INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
-(2, 22, 2, '2024-10-08 13:13:22');
-INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
-(3, 23, 2, '2024-10-08 13:13:22');
-INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`) VALUES
-(4, 24, 2, '2024-10-08 13:13:22'),
-(5, 27, 2, '2024-10-08 13:13:22'),
-(6, 29, 2, '2024-10-08 13:13:22'),
-(7, 30, 2, '2024-10-08 13:13:22'),
-(8, 25, 2, '2024-10-08 14:26:18'),
-(9, 25, 1, '2024-10-08 16:28:40'),
-(10, 26, 2, '2024-10-09 07:08:46');
+INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`, `RoomId`) VALUES
+(1, 21, 2, '2024-10-08 13:13:22', '1');
+INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`, `RoomId`) VALUES
+(2, 22, 2, '2024-10-08 13:13:22', '2');
+INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`, `RoomId`) VALUES
+(3, 23, 2, '2024-10-08 13:13:22', '3');
+INSERT INTO `DangKyKhoaHoc` (`IDDangKyKhoaHoc`, `IDKhoaHoc`, `IDNguoiDung`, `ngayDangKy`, `RoomId`) VALUES
+(4, 24, 2, '2024-10-08 13:13:22', '4'),
+(5, 27, 2, '2024-10-08 13:13:22', '7'),
+(6, 29, 2, '2024-10-08 13:13:22', '9'),
+(7, 30, 2, '2024-10-08 13:13:22', '10'),
+(8, 25, 2, '2024-10-08 14:26:18', '5'),
+(9, 25, 1, '2024-10-08 16:28:40', '5'),
+(10, 25, 3, '2024-10-09 07:08:46', '5'),
+(11, 28, 2, '2025-04-04 10:52:48', '8'),
+(12, 21, 10, '2025-04-04 12:18:52', '1');
 
 INSERT INTO `DanhMucKhoaHoc` (`IDDanhMuc`, `TenDanhMuc`) VALUES
 (1, 'Lập trình Java');
@@ -441,24 +496,24 @@ INSERT INTO `Hashtag` (`IDHashTag`, `HashTagName`, `IDKhoaHoc`) VALUES
 INSERT INTO `Hashtag` (`IDHashTag`, `HashTagName`, `IDKhoaHoc`) VALUES
 (6, '#khoahocnoibat', 51);
 
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`) VALUES
-(21, 1, 1, 1, 'Khóa học Lập trình Java', 'Khóa học cơ bản đến nâng cao về lập trình Java.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 150000, NULL, '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/rVXQgvou8Nk?si=SuuQAs6jJWwUFKyS\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>');
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`) VALUES
-(22, 1, 2, 2, 'Khóa học Lập trình Python', 'Khóa học học lập trình Python từ cơ bản đến nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 200000, NULL, '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/pwsF3TCILPg?si=yQiYORXr0ugPXDMq\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>');
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`) VALUES
-(23, 1, 3, 3, 'Phát triển Web với HTML, CSS và JavaScript', 'Khóa học giúp bạn xây dựng các trang web chuyên nghiệp.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'tra_phi', 300000, NULL, NULL);
-INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`) VALUES
-(24, 1, 2, 1, 'Khóa học Lập trình Python nâng cao', 'Khóa học học lập trình Python nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'tra_phi', 150000, NULL, NULL),
-(25, 1, 3, 1, 'Python trick', 'Khóa học giúp bạn có thêm những cách code ngắn gọn và nhanh hơn trong ngôn ngữ Python.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 200000, NULL, NULL),
-(26, 1, 1, 4, 'Khóa học Lập trình C#', 'Khóa học cơ bản lập trình C#.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 350000, NULL, NULL),
-(27, 1, 2, 5, 'Khóa học khoa học dữ liệu', 'Những kiến thức cơ bản về khoa học dữ liệu', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 400000, NULL, NULL),
-(28, 4, 3, 6, 'Khóa học trí tuệ nhân tạo', 'Khóa học giúp bạn hiểu thêm về trí tuệ nhân tạo', 'link_hinh_anh_moi.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 1000000, NULL, NULL),
-(29, 4, 2, 7, 'Khóa học Phát triển ứng dụng di động', 'Khóa học cơ bản Phát triển ứng dụng di động', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 500000, NULL, NULL),
-(30, 4, 3, 8, 'Khóa học An ninh mạng', 'Hiểu thêm về an ninh mạng thông qua khóa học', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 900000, NULL, NULL),
-(35, 4, NULL, 6, 'Khóa học java', 'Học java từ cơ bản đến nâng cao', 'https://link-to-image.com/hinhanh.jpg', '2024-10-27', 0, 0, NULL, 'tra_phi', 500000, NULL, NULL),
-(36, 4, NULL, 3, 'Khóa Học nâng cao AI', 'Học AI nâng cao', 'https://link-to-image.com/hinhanh.jpg', '2024-10-30', 0, 0, NULL, 'tra_phi', 600000, NULL, NULL),
-(50, 4, 1, 2, 'Lập trình JavaScript 3', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, NULL, NULL),
-(51, 4, 1, 2, 'Lập trình JavaScript 4', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, 6, NULL);
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`, `RoomId`) VALUES
+(21, 1, 1, 1, 'Khóa học Lập trình Java', 'Khóa học cơ bản đến nâng cao về lập trình Java.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 150000, NULL, '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/rVXQgvou8Nk?si=SuuQAs6jJWwUFKyS\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>', '1');
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`, `RoomId`) VALUES
+(22, 1, 2, 2, 'Khóa học Lập trình Python', 'Khóa học học lập trình Python từ cơ bản đến nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 200000, NULL, '<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/pwsF3TCILPg?si=yQiYORXr0ugPXDMq\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>', '2');
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`, `RoomId`) VALUES
+(23, 1, 3, 3, 'Phát triển Web với HTML, CSS và JavaScript', 'Khóa học giúp bạn xây dựng các trang web chuyên nghiệp.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'tra_phi', 300000, NULL, NULL, '3');
+INSERT INTO `KhoaHoc` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `NgayDang`, `LuotXem`, `SoLuongHocVien`, `GiamGia`, `LoaiKhoaHoc`, `GiaTien`, `IDHashTag`, `LinkVideo`, `RoomId`) VALUES
+(24, 1, 2, 1, 'Khóa học Lập trình Python nâng cao', 'Khóa học học lập trình Python nâng cao.', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'tra_phi', 150000, NULL, NULL, '4'),
+(25, 1, 3, 1, 'Python trick', 'Khóa học giúp bạn có thêm những cách code ngắn gọn và nhanh hơn trong ngôn ngữ Python.', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 200000, NULL, NULL, '5'),
+(26, 1, 1, 4, 'Khóa học Lập trình C#', 'Khóa học cơ bản lập trình C#.', 'java.jpg', '2024-10-01', 100, 50, '10.00', 'mien_phi', 350000, NULL, NULL, '6'),
+(27, 1, 2, 5, 'Khóa học khoa học dữ liệu', 'Những kiến thức cơ bản về khoa học dữ liệu', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 400000, NULL, NULL, '7'),
+(28, 4, 3, 6, 'Khóa học trí tuệ nhân tạo', 'Khóa học giúp bạn hiểu thêm về trí tuệ nhân tạo', 'link_hinh_anh_moi.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 1000000, NULL, NULL, '8'),
+(29, 4, 2, 7, 'Khóa học Phát triển ứng dụng di động', 'Khóa học cơ bản Phát triển ứng dụng di động', 'python.jpg', '2024-10-02', 150, 60, '20.00', 'mien_phi', 500000, NULL, NULL, '9'),
+(30, 4, 3, 8, 'Khóa học An ninh mạng', 'Hiểu thêm về an ninh mạng thông qua khóa học', 'web.jpg', '2024-10-03', 200, 70, '30.00', 'mien_phi', 900000, NULL, NULL, '10'),
+(35, 4, NULL, 6, 'Khóa học java', 'Học java từ cơ bản đến nâng cao', 'https://link-to-image.com/hinhanh.jpg', '2024-10-27', 0, 0, NULL, 'tra_phi', 500000, NULL, NULL, '11'),
+(36, 4, NULL, 3, 'Khóa Học nâng cao AI', 'Học AI nâng cao', 'https://link-to-image.com/hinhanh.jpg', '2024-10-30', 0, 0, NULL, 'tra_phi', 600000, NULL, NULL, '12'),
+(50, 4, 1, 2, 'Lập trình JavaScript 3', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, NULL, NULL, '13'),
+(51, 4, 1, 2, 'Lập trình JavaScript 4', 'Khóa học về JavaScript cơ bản và nâng cao', 'https://example.com/image.jpg', '2024-11-06', 0, 0, NULL, 'tra_phi', 500000, 6, NULL, '14');
 
 INSERT INTO `KhoaHocChuaDuyet` (`IDKhoaHoc`, `IDNguoiDung`, `IDKhuyenMai`, `IDDanhMuc`, `TenKhoaHoc`, `MoTaKhoaHoc`, `HinhAnh`, `LoaiKhoaHoc`, `GiaTien`, `NgayGuiKiemDuyet`, `TrangThai`) VALUES
 (3, 4, 1, 10, 'Khóa Học nâng cao AI', 'Học AI nâng cao', 'https://link-to-image.com/hinhanh.jpg', 'tra_phi', 250000, '2024-10-30', 'chua_duyet');
@@ -507,7 +562,7 @@ INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTe
 (3, 'khanhhungTest1', '$2b$10$lhSoQ.NW8ZowqY152epxAeWEatTgraIrUsWWtczGGYUOOLLF2rH7u', 'pjlatao999@gmail.com', 'Khánh Hưng Test 1', 'nam', '0942212265', 'giangvien', 'url.png');
 INSERT INTO `NguoiDung` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `GioiTinh`, `SDT`, `Role`, `AnhDaiDien`) VALUES
 (4, 'khanhhungTeacher', '$2b$10$igxGPRnAEVdWiX4igyaEx.UQFFKtz1jnJzOKRv1HowPbmhEVhGSTq', 'khanhhung.dacs@gmail.com', 'Khánh Hưng Teacher', 'nam', '0942212265', 'giangvien', 'url.png'),
-(10, 'test', '$2b$10$tM3ZKkSvRA4SqIzhC2F.lefi00VhuuisdYeWVoS6d.Xp5jDOfOo/e', 'test@gmail.com', 'test', 'nam', '09422212222', 'giangvien', NULL),
+(10, 'test', '$2b$10$tM3ZKkSvRA4SqIzhC2F.lefi00VhuuisdYeWVoS6d.Xp5jDOfOo/e', 'test@gmail.com', 'test', 'nam', '09422212222', 'hocvien', NULL),
 (11, 'Khánh Hưng Nguyễn', '$2b$10$Ji406IqC8mCOkzgbe3tNd.Ia3q4lMvHOtlxwkSpev/HkE2zVt5916', 'khanhhung1234321@gmail.com', 'Khánh Hưng Nguyễn', 'nam', '', 'hocvien', 'https://lh3.googleusercontent.com/a/ACg8ocIi6c8lcMuaNwr7pijjE3CgzpSrKQAOA2QMZOV_6GrU516G7lkI=s96-c');
 
 INSERT INTO `NguoiDungChan` (`IDNguoiDung`, `TenDangNhap`, `MatKhau`, `Email`, `HoTen`, `SDT`, `Role`, `GioiTinh`) VALUES
