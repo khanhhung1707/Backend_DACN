@@ -398,7 +398,30 @@ io.on("connection", (socket) => {
     }
   });
 
-  
+  // Xử lý send-course-message cho chat nhóm
+  socket.on("send-course-message", async (data) => {
+    const { IDNguoiDung, Content, RoomId, NgayGui } = data;
+
+    try {
+      // Lưu tin nhắn vào bảng Chat
+      await model.Chat.create({
+        IDNguoiDung,
+        Content,
+        RoomId,
+        NgayGui
+      });
+
+      // Gửi tin nhắn đến tất cả thành viên trong phòng
+      io.to(RoomId).emit("sv-send-mess", {
+        content: Content,
+        IDNguoiDung,
+        RoomId,
+        NgayGui
+      });
+    } catch (error) {
+      console.error("Error sending course message:", error);
+    }
+  });
 
 });
 
