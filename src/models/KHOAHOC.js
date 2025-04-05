@@ -84,6 +84,10 @@ export default class KhoaHoc extends Model {
     LinkVideo: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    RoomId: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,

@@ -30,6 +30,10 @@ export default class DangKyKhoaHoc extends Model {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: Sequelize.Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    RoomId: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,

@@ -36,27 +36,75 @@ export const regisCourse = async (req, res) => {
 };
 
 // API lấy danh sách khóa học đã đăng ký của người dùng
+// export const layDanhSachKhoaHocDaDangKy = async (req, res) => {
+//     const userId = req.user.id;
+
+//     try {
+//         // Lấy danh sách khóa học đã đăng ký
+//         const danhSachKhoaHoc = await model.DangKyKhoaHoc.findAll({
+//             where: { IDNguoiDung: userId },
+//             include: [{
+//                 model: model.KhoaHoc,
+//                 as: "IDKhoaHoc_KhoaHoc",
+//                 attributes: ['IDKhoaHoc', 'TenKhoaHoc', 'MoTaKhoaHoc',"HinhAnh", "SoLuongHocVien", "LoaiKhoaHoc","GiaTien","RoomId" ], 
+//                 model: model.GiangVien,
+//                 as: "IDGiangVien_GiangVien",
+//                 attributes: ['IDNguoiDung', 'HoTen', 'AnhDaiDien']
+//             }],
+//         });
+
+//         // Kiểm tra nếu không có khóa học nào
+//         if (danhSachKhoaHoc.length === 0) {
+//             return responseData(res, 404, "Không tìm thấy khóa học nào đã đăng ký");
+//         }
+
+//         return responseData(res, 200, "Danh sách khóa học đã đăng ký", danhSachKhoaHoc);
+//     } catch (error) {
+//         return responseData(res, 500, "Có lỗi xảy ra", error);
+//     }
+// };
+
+// API lấy danh sách khóa học đã đăng ký của người dùng (cập nhật)
 export const layDanhSachKhoaHocDaDangKy = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        // Lấy danh sách khóa học đã đăng ký
         const danhSachKhoaHoc = await model.DangKyKhoaHoc.findAll({
             where: { IDNguoiDung: userId },
-            include: [{
-                model: model.KhoaHoc,
-                as: "IDKhoaHoc_KhoaHoc",
-                attributes: ['IDKhoaHoc', 'TenKhoaHoc', 'MoTaKhoaHoc',"HinhAnh", "SoLuongHocVien", "LoaiKhoaHoc","GiaTien" ], 
-            }],
+            include: [
+                {
+                    model: model.KhoaHoc,
+                    as: "IDKhoaHoc_KhoaHoc",
+                    attributes: ['IDKhoaHoc', 'TenKhoaHoc', 'MoTaKhoaHoc', "HinhAnh", "SoLuongHocVien", "LoaiKhoaHoc", "GiaTien", "RoomId"],
+                    include: [{
+                        model: model.NguoiDung,
+                        as: "IDNguoiDung_NguoiDung",
+                        attributes: ['HoTen', 'AnhDaiDien'],
+                        where: { Role: 'giangvien' },
+                        required: false
+                    }]
+                }
+            ],
         });
 
-        // Kiểm tra nếu không có khóa học nào
         if (danhSachKhoaHoc.length === 0) {
             return responseData(res, 404, "Không tìm thấy khóa học nào đã đăng ký");
         }
 
-        return responseData(res, 200, "Danh sách khóa học đã đăng ký", danhSachKhoaHoc);
+        // Format dữ liệu, kiểm tra null
+        const formattedCourses = danhSachKhoaHoc.map(dangKy => {
+            const khoaHoc = dangKy.IDKhoaHoc_KhoaHoc.dataValues;
+            return {
+                ...khoaHoc,
+                GiangVien: khoaHoc.IDNguoiDung_NguoiDung 
+                    ? khoaHoc.IDNguoiDung_NguoiDung.dataValues 
+                    : null // Xử lý trường hợp không có giảng viên
+            };
+        });
+
+        return responseData(res, 200, "Danh sách khóa học đã đăng ký", formattedCourses);
     } catch (error) {
+        console.error("Lỗi khi lấy danh sách khóa học:", error);
         return responseData(res, 500, "Có lỗi xảy ra", error);
     }
 };
