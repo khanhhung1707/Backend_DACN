@@ -9,31 +9,52 @@ const model = initModels(sequelize);
 // API chỉnh sửa thông tin cá nhân của người dùng (trừ mật khẩu và role)
 export const updateUserProfile = async (req, res) => {
     try {
-        // Lấy ID người dùng từ token đã xác thực (req.user được gán từ middleware isAuthenticated)
         const { id } = req.user;
-
-        // Dữ liệu cần cập nhật từ body
         const { TenDangNhap, Email, HoTen, SDT, AnhDaiDien } = req.body;
 
-        // Kiểm tra xem người dùng có tồn tại không
+        // Validate Email 
+        if (Email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(Email)) {
+                return responseData(res, 400, "Email không đúng định dạng", null);
+            }
+        }
+
+        // Validate Vietnamese phone number 
+        if (SDT) {
+            const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8,9})\b$/;
+            if (!phoneRegex.test(SDT)) {
+                return responseData(res, 400, "Số điện thoại phải đúng định dạng", null);
+            }
+        }
+
         const user = await model.NguoiDung.findByPk(id);
         if (!user) {
             return responseData(res, 404, "Người dùng không tồn tại", null);
         }
 
-        // Cập nhật thông tin cá nhân (trừ mật khẩu)
-        user.TenDangNhap = TenDangNhap || user.TenDangNhap;
-        user.Email = Email || user.Email;
-        user.HoTen = HoTen || user.HoTen;
-        user.SDT = SDT || user.SDT;
-        user.AnhDaiDien = AnhDaiDien || user.AnhDaiDien;
+        // Prepare update data
+        const updateData = {
+            TenDangNhap: TenDangNhap || user.TenDangNhap,
+            Email: Email || user.Email,
+            HoTen: HoTen || user.HoTen,
+            SDT: SDT || user.SDT,
+            AnhDaiDien: AnhDaiDien || user.AnhDaiDien
+        };
 
-        // Lưu thông tin đã chỉnh sửa vào cơ sở dữ liệu
-        await user.save();
+        if (Email && Email !== user.Email) {
+            const existingUser = await model.NguoiDung.findOne({ where: { Email } });
+            if (existingUser) {
+                return responseData(res, 400, "Email đã được sử dụng bởi tài khoản khác", null);
+            }
+        }
+
+        await user.update(updateData);
 
         return responseData(res, 200, "Cập nhật thông tin cá nhân thành công", user);
     } catch (error) {
-        return responseData(res, 500, "Lỗi khi cập nhật thông tin cá nhân", error);
+        console.error("Error updating user profile:", error);
+        return responseData(res, 500, "Lỗi khi cập nhật thông tin cá nhân", error.message);
     }
 };
 
@@ -87,6 +108,24 @@ export const themNguoiDungHocVien = async (req, res) => {
   const { TenDangNhap, MatKhau, Email, HoTen, GioiTinh, SDT, AnhDaiDien } = req.body;
 
   try {
+      // Validate Email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(Email)) {
+          return responseData(res, 400, "Email không đúng định dạng", null);
+      }
+
+      // Validate Vietnamese phone number format (10-11 digits, starting with 03, 05, 07, 08, 09)
+      const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8,9})\b$/;
+      if (!phoneRegex.test(SDT)) {
+          return responseData(res, 400, "Số điện thoại không đúng định dạng Việt Nam", null);
+      }
+
+      // Validate Password (must contain both letters and numbers, lowercase only)
+      const passwordRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
+      if (!passwordRegex.test(MatKhau)) {
+          return responseData(res, 400, "Mật khẩu phải chứa cả chữ thường và số", null);
+      }
+
       const existingUser = await model.NguoiDung.findOne({ where: { Email } });
       if (existingUser) {
           return responseData(res, 400, "Email đã tồn tại", null);
@@ -113,33 +152,58 @@ export const themNguoiDungHocVien = async (req, res) => {
 
 // Sửa thông tin người dùng có role là hocvien theo IDNguoiDung
 export const suaNguoiDungHocVien = async (req, res) => {
-  const { idNguoiDung } = req.params; // Lấy IDNguoiDung từ params
-  const { TenDangNhap, MatKhau, Email, HoTen, GioiTinh, SDT, AnhDaiDien } = req.body;
-
-  try {
-      const hocVien = await model.NguoiDung.findByPk(idNguoiDung);
-
-      if (!hocVien || hocVien.Role !== 'hocvien') {
-          return responseData(res, 404, "Người dùng không tồn tại hoặc không phải học viên");
-      }
-
-      const hashedPassword = await bcrypt.hash(MatKhau, 10); // Mã hóa mật khẩu
-      await hocVien.update({
-          TenDangNhap,
-          MatKhau: hashedPassword,
-          Email,
-          HoTen,
-          GioiTinh,
-          SDT,
-          AnhDaiDien
-      });
-
-      return responseData(res, 200, "Thông tin học viên đã được cập nhật", hocVien);
-  } catch (error) {
-      console.error("Error updating hoc vien:", error);
-      return responseData(res, 500, "Có lỗi xảy ra: " + error.message);
-  }
-};
+    const { idNguoiDung } = req.params;
+    const { TenDangNhap, MatKhau, Email, HoTen, GioiTinh, SDT, AnhDaiDien } = req.body;
+  
+    try {
+        // Validate Email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (Email && !emailRegex.test(Email)) {
+            return responseData(res, 400, "Email không đúng định dạng", null);
+        }
+  
+        // Validate Vietnamese phone number format
+        const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8,9})\b$/;
+        if (SDT && !phoneRegex.test(SDT)) {
+            return responseData(res, 400, "Số điện thoại phải đúng định dạng", null);
+        }
+  
+        // Validate Password (only if provided)
+        if (MatKhau) {
+            const passwordRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
+            if (!passwordRegex.test(MatKhau)) {
+                return responseData(res, 400, "Mật khẩu phải có ít nhất 6 ký tự, chứa ít nhất 1 chữ thường và 1 số", null);
+            }
+        }
+  
+        const hocVien = await model.NguoiDung.findByPk(idNguoiDung);
+  
+        if (!hocVien || hocVien.Role !== 'hocvien') {
+            return responseData(res, 404, "Người dùng không tồn tại hoặc không phải học viên");
+        }
+  
+        const updateData = {
+            TenDangNhap,
+            Email,
+            HoTen,
+            GioiTinh,
+            SDT,
+            AnhDaiDien
+        };
+  
+        // Only update password if provided
+        if (MatKhau) {
+            updateData.MatKhau = await bcrypt.hash(MatKhau, 10);
+        }
+  
+        await hocVien.update(updateData);
+  
+        return responseData(res, 200, "Thông tin học viên đã được cập nhật", hocVien);
+    } catch (error) {
+        console.error("Error updating hoc vien:", error);
+        return responseData(res, 500, "Có lỗi xảy ra: " + error.message);
+    }
+  };
 
 // Xóa thông tin người dùng có role là hocvien theo IDNguoiDung
 export const xoaNguoiDungHocVien = async (req, res) => {
@@ -231,6 +295,24 @@ export const themNguoiDungGiangVien = async (req, res) => {
     const { TenDangNhap, MatKhau, Email, HoTen, GioiTinh, SDT, AnhDaiDien } = req.body;
   
     try {
+        // Validate Email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(Email)) {
+            return responseData(res, 400, "Email không đúng định dạng", null);
+        }
+
+        // Validate Vietnamese phone number format (10-11 digits, starting with 03, 05, 07, 08, 09)
+        const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8,9})\b$/;
+        if (!phoneRegex.test(SDT)) {
+            return responseData(res, 400, "Số điện thoại không đúng định dạng Việt Nam", null);
+        }
+
+        // Validate Password (must contain both letters and numbers, lowercase only)
+        const passwordRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
+        if (!passwordRegex.test(MatKhau)) {
+            return responseData(res, 400, "Mật khẩu phải chứa cả chữ thường và số", null);
+        }
+
         const existingUser = await model.NguoiDung.findOne({ where: { Email } });
         if (existingUser) {
             return responseData(res, 400, "Email đã tồn tại", null);
@@ -253,37 +335,62 @@ export const themNguoiDungGiangVien = async (req, res) => {
         console.error("Error adding giang vien:", error);
         return responseData(res, 500, "Có lỗi xảy ra: " + error.message);
     }
-  };
+};
 
 //sửa thông tin người dùng có role là giangvien
 export const suaNguoiDungGiangVien = async (req, res) => {
-    const { idNguoiDung } = req.params; // Lấy IDNguoiDung từ params
+    const { idNguoiDung } = req.params;
     const { TenDangNhap, MatKhau, Email, HoTen, GioiTinh, SDT, AnhDaiDien } = req.body;
-  
+
     try {
+        // Validate Email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (Email && !emailRegex.test(Email)) {
+            return responseData(res, 400, "Email không đúng định dạng", null);
+        }
+
+        // Validate Vietnamese phone number format
+        const phoneRegex = /^(0[3|5|7|8|9])+([0-9]{8,9})\b$/;
+        if (SDT && !phoneRegex.test(SDT)) {
+            return responseData(res, 400, "Số điện thoại phải đúng định dạng", null);
+        }
+
+        // Validate Password (only if provided)
+        if (MatKhau) {
+            const passwordRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,}$/;
+            if (!passwordRegex.test(MatKhau)) {
+                return responseData(res, 400, "Mật khẩu phải có ít nhất 6 ký tự, chứa ít nhất 1 chữ thường và 1 số", null);
+            }
+        }
+
         const giangVien = await model.NguoiDung.findByPk(idNguoiDung);
-  
+
         if (!giangVien || giangVien.Role !== 'giangvien') {
             return responseData(res, 404, "Người dùng không tồn tại hoặc không phải giảng viên");
         }
-  
-        const hashedPassword = await bcrypt.hash(MatKhau, 10); // Mã hóa mật khẩu
-        await giangVien.update({
+
+        const updateData = {
             TenDangNhap,
-            MatKhau: hashedPassword,
             Email,
             HoTen,
             GioiTinh,
             SDT,
             AnhDaiDien
-        });
-  
+        };
+
+        // Only update password if provided
+        if (MatKhau) {
+            updateData.MatKhau = await bcrypt.hash(MatKhau, 10);
+        }
+
+        await giangVien.update(updateData);
+
         return responseData(res, 200, "Thông tin giảng viên đã được cập nhật", giangVien);
     } catch (error) {
         console.error("Error updating giang vien:", error);
         return responseData(res, 500, "Có lỗi xảy ra: " + error.message);
     }
-  };
+};
 
 //xóa thông tin người dùng có role là giangvien
 export const xoaNguoiDungGiangVien = async (req, res) => {

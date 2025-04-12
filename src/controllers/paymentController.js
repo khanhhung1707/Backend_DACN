@@ -7,62 +7,69 @@ const model = initModels(sequelize);
 
 // Tạo thanh toán
 export const taoThanhToan = async (req, res) => {
-    const userId = req.user.id; // Lấy IDNguoiDung từ token đã xác thực
+    const userId = req.user.id;
     const { PhuongThucThanhToan, NoiDungThanhToan } = req.body;
 
     try {
-        console.log("User ID:", userId);  // Kiểm tra xem ID người dùng có đúng không
-        console.log("Payment Method:", PhuongThucThanhToan);  // Kiểm tra thông tin phương thức thanh toán
-        console.log("Payment Content:", NoiDungThanhToan);  // Kiểm tra nội dung thanh toán
-
-        // Lấy tất cả các đơn hàng của người dùng và tính tổng tiền
-        const donHangCuaNguoiDung = await model.DonHang.findAll({
-            where: { IDNguoiDung: userId, TrangThai: 'pending' },
-            include: [{ model: model.KhoaHoc, as: 'IDKhoaHoc_KhoaHoc', attributes: ['IDKhoaHoc'] }]  // Sử dụng alias 'KhoaHoc'
-        });
-
-        console.log("DonHang records found:", donHangCuaNguoiDung);  // In ra kết quả tìm kiếm đơn hàng
-
-        if (!donHangCuaNguoiDung || donHangCuaNguoiDung.length === 0) {
-            return responseData(res, 404, "Không có đơn hàng nào cho người dùng này", null);
+        // Kiểm tra bắt buộc phải có phương thức thanh toán
+        if (!PhuongThucThanhToan) {
+            return responseData(res, 400, "Vui lòng chọn phương thức thanh toán", null);
         }
 
-        // Tính tổng tiền từ các đơn hàng của người dùng
-        const tongTien = donHangCuaNguoiDung.reduce((acc, donHang) => acc + parseFloat(donHang.TongTien), 0);
+        // Lấy tất cả các đơn hàng pending của người dùng
+        const donHangCuaNguoiDung = await model.DonHang.findAll({
+            where: { 
+                IDNguoiDung: userId, 
+                TrangThai: 'pending',
+                IDThanhToan: null // Chỉ lấy đơn hàng chưa được thanh toán
+            },
+            include: [{ model: model.KhoaHoc, as: 'IDKhoaHoc_KhoaHoc', attributes: ['IDKhoaHoc'] }]  
+        });
 
-        // Tạo bản ghi mới trong bảng ThanhToan
+        // Kiểm tra nếu không có đơn hàng nào
+        if (!donHangCuaNguoiDung || donHangCuaNguoiDung.length === 0) {
+            return responseData(res, 400, "Không có đơn hàng nào để thanh toán. Vui lòng tạo đơn hàng trước.", null);
+        }
+
+        // Kiểm tra nếu tổng tiền = 0 (trường hợp đặc biệt)
+        const tongTien = donHangCuaNguoiDung.reduce((acc, donHang) => acc + parseFloat(donHang.TongTien), 0);
+        if (tongTien <= 0) {
+            return responseData(res, 400, "Tổng tiền thanh toán không hợp lệ", null);
+        }
+
+        // Tạo thanh toán
         const thanhToanMoi = await model.ThanhToan.create({
             NgayThanhToan: new Date(),
             PhuongThucThanhToan,
             NoiDungThanhToan,
             TongTien: tongTien,
-            IDNguoiDung: userId // Lưu thông tin người dùng vào thanh toán
+            IDNguoiDung: userId
         });
 
-        // Lưu mối quan hệ giữa ThanhToan và DonHang vào bảng trung gian ThanhToan_DonHang
+        // Lưu thông tin thanh toán cho từng đơn hàng
         for (const donHang of donHangCuaNguoiDung) {
-            const idKhoaHoc = donHang.KhoaHoc ? donHang.KhoaHoc.IDKhoaHoc : null;  // Lấy IDKhoaHoc từ alias 'KhoaHoc'
+            const idKhoaHoc = donHang.KhoaHoc ? donHang.KhoaHoc.IDKhoaHoc : null; 
 
             await model.ThanhToan_DonHang.create({
                 IDThanhToan: thanhToanMoi.IDThanhToan,
                 IDDonHang: donHang.IDDonHang,
-                IDKhoaHoc: idKhoaHoc  // Lưu thông tin IDKhoaHoc trong bảng ThanhToan_DonHang
+                IDKhoaHoc: idKhoaHoc 
             });
-        }
 
-        // Cập nhật trạng thái các đơn hàng đã thanh toán (gắn thêm IDThanhToan vào)
-        for (const donHang of donHangCuaNguoiDung) {
             await model.DonHang.update(
                 { TrangThai: 'da_thanh_toan', IDThanhToan: thanhToanMoi.IDThanhToan },
                 { where: { IDDonHang: donHang.IDDonHang } }
             );
         }
 
-        // Trả về kết quả
-        return responseData(res, 200, "Tạo thanh toán thành công", thanhToanMoi);
+        return responseData(res, 200, "Thanh toán thành công", {
+            thanhToan: thanhToanMoi,
+            soDonHang: donHangCuaNguoiDung.length,
+            tongTien: tongTien
+        });
     } catch (error) {
         console.error("Lỗi khi tạo thanh toán:", error);
-        return responseData(res, 500, "Lỗi khi tạo thanh toán", error);
+        return responseData(res, 500, "Lỗi hệ thống khi xử lý thanh toán", error.message);
     }
 };
 

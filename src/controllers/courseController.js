@@ -289,7 +289,17 @@ export const createCourse = async (req, res) => {
         } = req.body;
 
         // Kiểm tra dữ liệu đầu vào
-        if (!TenKhoaHoc || !MoTaKhoaHoc || !HinhAnh || !LoaiKhoaHoc || !IDDanhMuc || !GiaTien || !IDKhuyenMai || !LuotXem || !SoLuongHocVien || !GiamGia || !LinkVideo) {
+        if (typeof TenKhoaHoc !== "string" || 
+            typeof MoTaKhoaHoc !== "string" || 
+            typeof HinhAnh !== "string" ||
+            typeof LoaiKhoaHoc !== "string" ||
+            typeof IDDanhMuc !== "number" ||
+            typeof GiaTien !== "number" ||
+            typeof IDKhuyenMai !== "number" ||
+            typeof LuotXem !== "number" ||
+            typeof SoLuongHocVien !== "number" ||
+            typeof GiamGia !== "number" ||
+            typeof LinkVideo !== "string") {
             return responseData(res, 400, "Thiếu dữ liệu đầu vào", null);
         }
 
